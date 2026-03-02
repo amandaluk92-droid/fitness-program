@@ -1,0 +1,350 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  TRAINER
+  TRAINEE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  EXPIRED
+}
+
+enum BillingInterval {
+  MONTHLY
+  SEMI_ANNUAL // 6 months, 10% off
+  ANNUAL
+}
+
+enum SubscriptionTier {
+  FREE_TRIAL
+  STARTER
+  GROWTH
+  STUDIO
+  PRO
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum TemplateCategory {
+  GBC
+  REHAB
+}
+
+enum PhotoPose {
+  FRONT
+  SIDE
+  BACK
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Sign-up consent
+  newsletterOptIn  Boolean   @default(false)
+  termsAcceptedAt DateTime?
+
+  // Optional profile fields (used mainly by trainees)
+  phone      String?
+  age        Int?
+  sex        String?
+  goals      String?
+  weight     Float?
+  goalWeight Float?
+
+  // Trainer relationships
+  createdPrograms   TrainingProgram[]           @relation("TrainerPrograms")
+  connectionsAsTrainer TrainerTraineeConnection[] @relation("TrainerConnections")
+
+  // Trainee relationships
+  programAssignments  ProgramAssignment[]      @relation("TraineeAssignments")
+  trainingSessions    TrainingSession[]
+  connectionsAsTrainee TrainerTraineeConnection[] @relation("TraineeConnections")
+  bodyWeightEntries   BodyWeightEntry[]
+
+  // Progress photos
+  progressPhotos      ProgressPhoto[]
+
+  // Password reset tokens
+  passwordResetTokens PasswordResetToken[]
+
+  // Subscription and payment relationships
+  trainerSubscriptions TrainerSubscription[]
+  payments             Payment[]
+
+  @@map("users")
+}
+
+model BodyWeightEntry {
+  id        String   @id @default(cuid())
+  traineeId String
+  weight    Float
+  date      DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  trainee User @relation(fields: [traineeId], references: [id], onDelete: Cascade)
+
+  @@unique([traineeId, date])
+  @@map("body_weight_entries")
+}
+
+model TrainingProgram {
+  id               String   @id @default(cuid())
+  name             String
+  description      String?
+  duration         Int? // Duration in weeks
+  trainerId        String
+  sourceTemplateId String? // Template this program was created from
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  trainer          User                 @relation("TrainerPrograms", fields: [trainerId], references: [id], onDelete: Cascade)
+  sourceTemplate   ProgramTemplate?     @relation("ProgramsFromTemplate", fields: [sourceTemplateId], references: [id], onDelete: SetNull)
+  assignments      ProgramAssignment[]
+  exercises        ProgramExercise[]
+  sessions         TrainingSession[]
+
+  @@map("training_programs")
+}
+
+model ProgramAssignment {
+  id        String   @id @default(cuid())
+  programId String
+  traineeId String
+  createdAt DateTime @default(now())
+
+  program TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  trainee User             @relation("TraineeAssignments", fields: [traineeId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, traineeId])
+  @@map("program_assignments")
+}
+
+model TrainerTraineeConnection {
+  id        String   @id @default(cuid())
+  trainerId String
+  traineeId String
+  createdAt DateTime @default(now())
+
+  trainer User @relation("TrainerConnections", fields: [trainerId], references: [id], onDelete: Cascade)
+  trainee User @relation("TraineeConnections", fields: [traineeId], references: [id], onDelete: Cascade)
+
+  @@unique([trainerId, traineeId])
+  @@map("trainer_trainee_connections")
+}
+
+model Exercise {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  muscleGroup String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  programExercises        ProgramExercise[]
+  programTemplateExercises ProgramTemplateExercise[]
+  sessionExercises        SessionExercise[]
+
+  @@map("exercises")
+}
+
+model ProgramTemplate {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  duration    Int? // Duration in weeks
+  category    TemplateCategory
+  injuryType  String? // e.g. ACL, Rotator Cuff, Lower Back (for REHAB)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  exercises   ProgramTemplateExercise[]
+  programs    TrainingProgram[]         @relation("ProgramsFromTemplate")
+
+  @@map("program_templates")
+}
+
+model ProgramTemplateExercise {
+  id               String   @id @default(cuid())
+  templateId       String
+  exerciseId       String
+  sets             Int
+  reps             Int
+  weight           Float?
+  restTimeSeconds  Int?
+  order            Int      @default(0)
+  dayOfWeek        Int? // 0-6 (Sunday-Saturday), null if not day-specific
+  workoutDayIndex  Int? // 1-4 for multi-day templates (Day 1, Day 2, etc.)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  template ProgramTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  exercise Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@map("program_template_exercises")
+}
+
+model ProgramExercise {
+  id               String   @id @default(cuid())
+  programId        String
+  exerciseId       String
+  sets             Int
+  reps             Int
+  weight           Float? // Optional target weight
+  restTimeSeconds  Int? // Rest time in seconds
+  order            Int      @default(0) // Order within program
+  dayOfWeek        Int? // 0-6 (Sunday-Saturday), null if not day-specific
+  workoutDayIndex  Int? // 1-4 for multi-day programs (Day 1, Day 2, etc.)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  program  TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  exercise Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@map("program_exercises")
+}
+
+model TrainingSession {
+  id        String   @id @default(cuid())
+  programId String
+  traineeId String
+  date      DateTime @default(now())
+  notes     String?
+  rpe       Int? // Rate of Perceived Exertion (1-10)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  program  TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  trainee  User            @relation(fields: [traineeId], references: [id], onDelete: Cascade)
+  exercises SessionExercise[]
+
+  @@map("training_sessions")
+}
+
+model SessionExercise {
+  id        String   @id @default(cuid())
+  sessionId String
+  exerciseId String
+  sets      Int
+  reps      Int[]
+  weights   Float[]
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  session  TrainingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise Exercise         @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@map("session_exercises")
+}
+
+model TrainerSubscription {
+  id                   String             @id @default(cuid())
+  trainerId            String
+  tier                 SubscriptionTier
+  status               SubscriptionStatus @default(ACTIVE)
+  amount               Float
+  currency             String             @default("HKD")
+  billingInterval      BillingInterval
+  startDate            DateTime
+  endDate              DateTime?
+  stripeSubscriptionId String?
+  stripeCustomerId     String?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  trainer User @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+
+  @@map("trainer_subscriptions")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  amount          Float
+  currency        String        @default("HKD")
+  status          PaymentStatus @default(PENDING)
+  description     String?
+  stripePaymentId String?
+  createdAt       DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model ProgressPhoto {
+  id        String    @id @default(cuid())
+  traineeId String
+  photoUrl  String
+  date      DateTime  @db.Date
+  pose      PhotoPose
+  notes     String?
+  createdAt DateTime  @default(now())
+
+  trainee User @relation(fields: [traineeId], references: [id], onDelete: Cascade)
+
+  @@index([traineeId, date])
+  @@map("progress_photos")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model StripeConfig {
+  id                       String   @id @default(cuid())
+  stripeSecretKey          String?
+  stripeWebhookSecret      String?
+  stripePriceIdStarter     String?
+  stripePriceIdGrowth      String?
+  stripePriceIdStudio      String?
+  stripePriceIdPro         String?
+  stripePriceIdStarter6mo  String?
+  stripePriceIdStarter12mo String?
+  stripePriceIdGrowth6mo   String?
+  stripePriceIdGrowth12mo  String?
+  stripePriceIdStudio6mo   String?
+  stripePriceIdStudio12mo  String?
+  stripePriceIdPro6mo      String?
+  stripePriceIdPro12mo     String?
+  stripePublishableKey     String?
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  @@map("stripe_config")
+}

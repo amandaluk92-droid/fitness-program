@@ -1,0 +1,58 @@
+{
+  "name": "fitness-program-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001 --webpack",
+    "build": "prisma generate && next build",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:demo": "tsx prisma/demo-data.ts",
+    "demo": "next dev --webpack",
+    "demo:setup": "npm run db:seed && npm run db:demo",
+    "admin:promote": "tsx prisma/scripts/promote-admin.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
+    "@prisma/client": "^6.19.2",
+    "@supabase/supabase-js": "^2.98.0",
+    "bcryptjs": "^2.4.3",
+    "browser-image-compression": "^2.0.2",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "jspdf": "^4.1.0",
+    "jspdf-autotable": "^5.0.1",
+    "lucide-react": "^0.427.0",
+    "next": "^16.1.6",
+    "next-auth": "^4.24.7",
+    "next-intl": "^3.26.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "recharts": "^2.12.7",
+    "resend": "^6.9.3",
+    "stripe": "^20.3.0",
+    "tailwind-merge": "^2.5.2",
+    "xlsx": "^0.18.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.14.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.1.6",
+    "postcss": "^8.4.40",
+    "prisma": "^6.19.2",
+    "tailwindcss": "^3.4.7",
+    "tsx": "^4.7.0",
+    "typescript": "^5.5.4"
+  }
+}
