@@ -27,7 +27,7 @@ export default async function TrainerLayout({
           paymentsDisabled={isPaymentsDisabled()}
         />
       </div>
-      <main className="flex-1 overflow-y-auto">
+      <main id="main-content" className="flex-1 overflow-y-auto">
         <div className="p-6">
           {children}
         </div>

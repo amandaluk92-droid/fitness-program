@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/shared/Button'
+import { useToast } from '@/components/shared/Toast'
 
 interface ManageBillingButtonProps {
   /** Hide for free trial (no Stripe customer). Default true. */
@@ -11,6 +12,7 @@ interface ManageBillingButtonProps {
 
 export function ManageBillingButton({ show = true }: ManageBillingButtonProps) {
   const t = useTranslations('trainer.manageBilling')
+  const { showToast } = useToast()
   const [loading, setLoading] = useState(false)
   if (!show) return null
 
@@ -22,10 +24,10 @@ export function ManageBillingButton({ show = true }: ManageBillingButtonProps) {
       if (data.url) {
         window.location.href = data.url
       } else {
-        alert(data.error || t('manageBilling'))
+        showToast(data.error || t('manageBilling'))
       }
-    } catch (e) {
-      alert(t('manageBilling'))
+    } catch {
+      showToast(t('manageBilling'))
     } finally {
       setLoading(false)
     }

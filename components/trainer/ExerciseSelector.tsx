@@ -29,6 +29,8 @@ export interface ProgramExercise {
   order: number
   dayOfWeek?: number
   workoutDayIndex?: number
+  tempo?: string
+  supersetGroup?: string
 }
 
 export function ExerciseSelector({ onExercisesChange, initialExercises = [] }: ExerciseSelectorProps) {
@@ -114,7 +116,14 @@ export function ExerciseSelector({ onExercisesChange, initialExercises = [] }: E
   const renderExerciseRow = (exercise: ProgramExercise, flatIndex: number) => (
     <div key={flatIndex} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
       <div className="flex items-start justify-between mb-3">
-        <h4 className="font-medium text-gray-900">{t('exercises')}</h4>
+        <div className="flex items-center gap-2">
+          {exercise.supersetGroup && (
+            <span className="inline-flex items-center text-xs font-semibold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">
+              {exercise.supersetGroup}
+            </span>
+          )}
+          <h4 className="font-medium text-gray-900">{t('exercises')}</h4>
+        </div>
         <Button
           type="button"
           variant="ghost"
@@ -197,6 +206,30 @@ export function ExerciseSelector({ onExercisesChange, initialExercises = [] }: E
             onChange={(e) => updateExercise(flatIndex, 'restTimeSeconds', e.target.value ? parseInt(e.target.value) : undefined)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             placeholder={t('restPlaceholder')}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('tempoOptional')}</label>
+          <input
+            type="text"
+            maxLength={4}
+            value={exercise.tempo || ''}
+            onChange={(e) => updateExercise(flatIndex, 'tempo', e.target.value || undefined)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            placeholder={t('tempoPlaceholder')}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('supersetOptional')}</label>
+          <input
+            type="text"
+            maxLength={2}
+            value={exercise.supersetGroup || ''}
+            onChange={(e) => updateExercise(flatIndex, 'supersetGroup', e.target.value || undefined)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            placeholder={t('supersetPlaceholder')}
           />
         </div>
       </div>

@@ -52,7 +52,7 @@ export function LoginForm() {
       router.push('/')
       router.refresh()
     } catch (err) {
-      setError('An error occurred. Please try again.')
+      setError(t('genericError'))
       setIsLoading(false)
     }
   }

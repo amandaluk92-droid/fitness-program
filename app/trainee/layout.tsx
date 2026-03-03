@@ -22,7 +22,7 @@ export default async function TraineeLayout({
       <div className="w-64 flex-shrink-0">
         <Sidebar role="TRAINEE" userName={session.user.name} />
       </div>
-      <main className="flex-1 overflow-y-auto">
+      <main id="main-content" className="flex-1 overflow-y-auto">
         <div className="p-6">
           {children}
         </div>

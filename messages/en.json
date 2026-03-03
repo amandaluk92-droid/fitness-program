@@ -6,6 +6,22 @@
     "error": "Something went wrong",
     "back": "Back"
   },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "tryAgain": "Try again"
+  },
+  "settings": {
+    "title": "Settings",
+    "dangerZone": "Danger Zone",
+    "dangerZoneDescription": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "deleteAccount": "Delete Account",
+    "deleteAccountTitle": "Are you sure you want to delete your account?",
+    "deleteAccountWarning": "This will permanently delete all your data including training sessions, programs, progress photos, and any active subscriptions. This action cannot be undone.",
+    "deleteAccountConfirmPrompt": "Type DELETE to confirm",
+    "confirmDelete": "Permanently Delete Account",
+    "deleting": "Deleting..."
+  },
   "landing": {
     "heroTitle1": "Coach clients.",
     "heroTitle2": "Track progress.",
@@ -48,6 +64,7 @@
     "accountNamePlaceholder": "How we'll call you",
     "passwordPlaceholder": "At least 6 characters",
     "invalidCredentials": "Invalid email or password",
+    "genericError": "An error occurred. Please try again.",
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?",
     "backToSignUp": "Back to sign up",
@@ -301,6 +318,7 @@
       "all": "All",
       "gbc": "GBC (German Body Composition)",
       "rehab": "Injury Rehab",
+      "powerlifting": "Powerlifting",
       "rehabDisclaimer": "For informational purposes. Trainees should consult a healthcare provider before starting any rehab program.",
       "loading": "Loading templates...",
       "noTemplates": "No templates found.",
@@ -309,7 +327,9 @@
       "selectCategory": "Category",
       "selectInjuryType": "Injury Type",
       "duration": "Duration",
-      "weeks": "weeks"
+      "weeks": "weeks",
+      "tempo": "Tempo",
+      "supersetGroup": "Supersets"
     },
     "programForm": {
       "programName": "Program name",
@@ -417,6 +437,10 @@
       "targetWeight": "Target weight",
       "restOptional": "Rest Time (seconds) - Optional",
       "restPlaceholder": "Rest between sets",
+      "tempoOptional": "Tempo - Optional",
+      "tempoPlaceholder": "e.g. 3010",
+      "supersetOptional": "Superset Group - Optional",
+      "supersetPlaceholder": "e.g. A, B, C",
       "noExercisesHint": "No exercises added. Click \"Add Exercise\" to get started.",
       "day": "Day {day}",
       "searchExercise": "Search Exercise Demo"

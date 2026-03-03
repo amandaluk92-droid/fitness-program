@@ -6,10 +6,16 @@ import type { UserRole } from '@prisma/client'
 import { prisma } from './prisma'
 import bcrypt from 'bcryptjs'
 
+/**
+ * Demo mode: only available in development (never in production).
+ * For local development, allows unauthenticated access using a demo trainee account.
+ */
 const DEMO_TRAINEE_EMAIL = 'trainee@demo.com'
+const isDemoAllowed = process.env.NODE_ENV === 'development'
 
 /** For demo: when no real session, return session for demo trainee so app works without login */
-export async function getDemoSession(): Promise<Session | null> {
+async function getDemoSession(): Promise<Session | null> {
+  if (!isDemoAllowed) return null
   const user = await prisma.user.findUnique({
     where: { email: DEMO_TRAINEE_EMAIL },
   })
@@ -25,12 +31,10 @@ export async function getDemoSession(): Promise<Session | null> {
   }
 }
 
-/** Use real session if logged in; in non-production or when ENABLE_DEMO_MODE is set, fall back to demo trainee session */
+/** Use real session if logged in; in development only, fall back to demo trainee session */
 export async function getSession(): Promise<Session | null> {
   const session = await getServerSession(authOptions)
   if (session) return session
-  const isDemoAllowed =
-    process.env.NODE_ENV !== 'production' || process.env.ENABLE_DEMO_MODE === 'true'
   if (isDemoAllowed) return getDemoSession()
   return null
 }

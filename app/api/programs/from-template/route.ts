@@ -13,6 +13,8 @@ const exerciseModSchema = z.object({
   order: z.number().int().default(0),
   dayOfWeek: z.number().int().min(0).max(6).optional(),
   workoutDayIndex: z.number().int().min(1).max(7).optional(),
+  tempo: z.string().optional(),
+  supersetGroup: z.string().optional(),
 })
 
 const fromTemplateSchema = z.object({
@@ -82,6 +84,8 @@ export async function POST(request: NextRequest) {
         order: ex.order ?? idx,
         dayOfWeek: ex.dayOfWeek ?? undefined,
         workoutDayIndex: ex.workoutDayIndex ?? undefined,
+        tempo: (ex as any).tempo ?? undefined,
+        supersetGroup: (ex as any).supersetGroup ?? undefined,
       })
     )
 
@@ -102,6 +106,8 @@ export async function POST(request: NextRequest) {
             order: ex.order,
             dayOfWeek: ex.dayOfWeek,
             workoutDayIndex: ex.workoutDayIndex,
+            tempo: ex.tempo,
+            supersetGroup: ex.supersetGroup,
           })),
         },
       },

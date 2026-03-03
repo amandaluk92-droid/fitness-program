@@ -6,6 +6,22 @@
     "error": "出错了",
     "back": "返回"
   },
+  "errorBoundary": {
+    "title": "出错了",
+    "description": "发生意外错误，请重试。",
+    "tryAgain": "重试"
+  },
+  "settings": {
+    "title": "设置",
+    "dangerZone": "危险区域",
+    "dangerZoneDescription": "永久删除您的账户及所有相关数据。此操作无法撤销。",
+    "deleteAccount": "删除账户",
+    "deleteAccountTitle": "您确定要删除账户吗？",
+    "deleteAccountWarning": "此操作将永久删除您的所有数据，包括训练记录、计划、进度照片及任何有效订阅。此操作无法撤销。",
+    "deleteAccountConfirmPrompt": "输入 DELETE 以确认",
+    "confirmDelete": "永久删除账户",
+    "deleting": "删除中..."
+  },
   "landing": {
     "heroTitle1": "教练客户。",
     "heroTitle2": "追踪进度。",
@@ -48,6 +64,7 @@
     "accountNamePlaceholder": "我们如何称呼您",
     "passwordPlaceholder": "至少 6 个字符",
     "invalidCredentials": "邮箱或密码错误",
+    "genericError": "发生错误，请重试。",
     "dontHaveAccount": "没有账户？",
     "alreadyHaveAccount": "已有账户？",
     "backToSignUp": "返回注册",
@@ -301,6 +318,7 @@
       "all": "全部",
       "gbc": "GBC（德国身体组成）",
       "rehab": "损伤康复",
+      "powerlifting": "力量举",
       "rehabDisclaimer": "仅供参考。学员在开始任何康复计划前应咨询医疗专业人士。",
       "loading": "加载模板中...",
       "noTemplates": "未找到模板。",
@@ -309,7 +327,9 @@
       "selectCategory": "类别",
       "selectInjuryType": "损伤类型",
       "duration": "时长",
-      "weeks": "周"
+      "weeks": "周",
+      "tempo": "节奏",
+      "supersetGroup": "超级组"
     },
     "programForm": {
       "programName": "计划名称",
@@ -417,6 +437,10 @@
       "targetWeight": "目标重量",
       "restOptional": "休息时间（秒）- 选填",
       "restPlaceholder": "组间休息",
+      "tempoOptional": "节奏 - 选填",
+      "tempoPlaceholder": "例如 3010",
+      "supersetOptional": "超级组 - 选填",
+      "supersetPlaceholder": "例如 A, B, C",
       "noExercisesHint": "尚未添加动作。点击「添加动作」开始。",
       "day": "第 {day} 天",
       "searchExercise": "搜索动作示范"

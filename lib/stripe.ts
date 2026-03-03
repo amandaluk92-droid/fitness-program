@@ -86,25 +86,30 @@ function getDbPriceIdForInterval(
   tier: SubscriptionTier,
   interval: BillingIntervalForPrice
 ): string | null {
-  const monthly = {
+  if (tier === 'FREE_TRIAL') return null
+
+  const monthlyMap: Record<string, string | null> = {
     STARTER: row.stripePriceIdStarter,
     GROWTH: row.stripePriceIdGrowth,
     STUDIO: row.stripePriceIdStudio,
     PRO: row.stripePriceIdPro,
-  }[tier]
-  if (interval === 'MONTHLY') return monthly ?? null
-  const sixMo = {
+  }
+  const monthly = monthlyMap[tier] ?? null
+  if (interval === 'MONTHLY') return monthly
+  const sixMoMap: Record<string, string | null> = {
     STARTER: row.stripePriceIdStarter6mo,
     GROWTH: row.stripePriceIdGrowth6mo,
     STUDIO: row.stripePriceIdStudio6mo,
     PRO: row.stripePriceIdPro6mo,
-  }[tier]
-  const twelveMo = {
+  }
+  const sixMo = sixMoMap[tier] ?? null
+  const twelveMoMap: Record<string, string | null> = {
     STARTER: row.stripePriceIdStarter12mo,
     GROWTH: row.stripePriceIdGrowth12mo,
     STUDIO: row.stripePriceIdStudio12mo,
     PRO: row.stripePriceIdPro12mo,
-  }[tier]
+  }
+  const twelveMo = twelveMoMap[tier] ?? null
   const id = interval === 'SEMI_ANNUAL' ? sixMo : twelveMo
   return (id ?? monthly) ?? null
 }

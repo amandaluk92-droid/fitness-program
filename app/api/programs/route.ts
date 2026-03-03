@@ -18,6 +18,9 @@ const programSchema = z.object({
       restTimeSeconds: z.number().int().positive().optional(),
       order: z.number().int().default(0),
       dayOfWeek: z.number().int().min(0).max(6).optional(),
+      workoutDayIndex: z.number().int().min(1).max(7).optional(),
+      tempo: z.string().optional(),
+      supersetGroup: z.string().optional(),
     })
   ),
 })
@@ -73,6 +76,9 @@ export async function POST(request: NextRequest) {
             restTimeSeconds: ex.restTimeSeconds,
             order: ex.order,
             dayOfWeek: ex.dayOfWeek,
+            workoutDayIndex: ex.workoutDayIndex,
+            tempo: ex.tempo,
+            supersetGroup: ex.supersetGroup,
           })),
         },
       },

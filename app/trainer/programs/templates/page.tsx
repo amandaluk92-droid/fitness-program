@@ -16,6 +16,8 @@ interface TemplateExercise {
   order: number
   dayOfWeek?: number | null
   workoutDayIndex?: number | null
+  tempo?: string | null
+  supersetGroup?: string | null
   exercise: { id: string; name: string }
 }
 
@@ -28,6 +30,19 @@ interface Template {
   injuryType: string | null
   isActive: boolean
   exercises: TemplateExercise[]
+}
+
+function getCategoryBadgeClasses(category: string) {
+  switch (category) {
+    case 'GBC':
+      return 'bg-primary-100 text-primary-700'
+    case 'REHAB':
+      return 'bg-amber-100 text-amber-800'
+    case 'POWERLIFTING':
+      return 'bg-green-100 text-green-800'
+    default:
+      return 'bg-gray-100 text-gray-700'
+  }
 }
 
 export default function TemplatesPage() {
@@ -54,6 +69,26 @@ export default function TemplatesPage() {
   const injuryTypes = [...new Set(templates.map((t) => t.injuryType).filter(Boolean))] as string[]
 
   const hasRehabTemplates = templates.some((t) => t.category === 'REHAB')
+
+  const getCategoryLabel = (cat: string) => {
+    switch (cat) {
+      case 'GBC': return t('gbc')
+      case 'REHAB': return t('rehab')
+      case 'POWERLIFTING': return t('powerlifting')
+      default: return cat
+    }
+  }
+
+  const formatExerciseName = (exercise: TemplateExercise) => {
+    const parts: string[] = []
+    if (exercise.supersetGroup) {
+      // Count which index within the superset group this exercise is
+      // We determine this based on order within the same day and group
+      parts.push(`${exercise.supersetGroup}`)
+    }
+    parts.push(exercise.exercise.name)
+    return parts.join(' ')
+  }
 
   return (
     <div className="space-y-6">
@@ -87,12 +122,16 @@ export default function TemplatesPage() {
           <label className="block text-sm font-medium text-gray-700 mb-1">{t('category')}</label>
           <select
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => {
+              setCategory(e.target.value)
+              if (e.target.value !== 'REHAB') setInjuryType('')
+            }}
             className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           >
             <option value="">{t('all')}</option>
             <option value="GBC">{t('gbc')}</option>
             <option value="REHAB">{t('rehab')}</option>
+            <option value="POWERLIFTING">{t('powerlifting')}</option>
           </select>
         </div>
 
@@ -134,13 +173,9 @@ export default function TemplatesPage() {
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <h3 className="text-lg font-semibold text-gray-900">{template.name}</h3>
                   <span
-                    className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                      template.category === 'GBC'
-                        ? 'bg-primary-100 text-primary-700'
-                        : 'bg-amber-100 text-amber-800'
-                    }`}
+                    className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${getCategoryBadgeClasses(template.category)}`}
                   >
-                    {template.category === 'GBC' ? t('gbc') : t('rehab')}
+                    {getCategoryLabel(template.category)}
                   </span>
                 </div>
                 {template.injuryType && (
@@ -160,15 +195,35 @@ export default function TemplatesPage() {
                         .map((e) => e.workoutDayIndex)
                         .filter((d): d is number => d != null)
                     ).size
-                    return workoutDays > 0 ? (
-                      <div>
-                        {workoutDays} workout day{workoutDays !== 1 ? 's' : ''},{' '}
-                        {template.exercises.length} exercise{template.exercises.length !== 1 ? 's' : ''}
-                      </div>
-                    ) : (
-                      <div>
-                        {template.exercises.length} exercise{template.exercises.length !== 1 ? 's' : ''}
-                      </div>
+                    const hasTempo = template.exercises.some((e) => e.tempo)
+                    const hasSupersets = template.exercises.some((e) => e.supersetGroup)
+                    return (
+                      <>
+                        {workoutDays > 0 ? (
+                          <div>
+                            {workoutDays} workout day{workoutDays !== 1 ? 's' : ''},{' '}
+                            {template.exercises.length} exercise{template.exercises.length !== 1 ? 's' : ''}
+                          </div>
+                        ) : (
+                          <div>
+                            {template.exercises.length} exercise{template.exercises.length !== 1 ? 's' : ''}
+                          </div>
+                        )}
+                        {(hasTempo || hasSupersets) && (
+                          <div className="flex gap-2 mt-1">
+                            {hasTempo && (
+                              <span className="inline-flex items-center text-xs px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">
+                                {t('tempo')}
+                              </span>
+                            )}
+                            {hasSupersets && (
+                              <span className="inline-flex items-center text-xs px-1.5 py-0.5 rounded bg-purple-50 text-purple-700">
+                                {t('supersetGroup')}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </>
                     )
                   })()}
                 </div>

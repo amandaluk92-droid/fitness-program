@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { supabase, PROGRESS_PHOTOS_BUCKET, getPhotoStoragePath } from '@/lib/supabase'
+import { supabaseAdmin, PROGRESS_PHOTOS_BUCKET, getPhotoStoragePath, getSignedPhotoUrl } from '@/lib/supabase'
 import { z } from 'zod'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif']
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const storagePath = getPhotoStoragePath(session.user.id, validated.date, validated.pose)
 
     const buffer = Buffer.from(await file.arrayBuffer())
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabaseAdmin.storage
       .from(PROGRESS_PHOTOS_BUCKET)
       .upload(storagePath, buffer, {
         contentType: 'image/jpeg',
@@ -55,10 +55,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to upload photo' }, { status: 500 })
     }
 
-    const { data: urlData } = supabase.storage
-      .from(PROGRESS_PHOTOS_BUCKET)
-      .getPublicUrl(storagePath)
-
+    // Store the storage path rather than public URL — signed URLs are generated on read
     // Replace existing photo for same trainee+date+pose
     await prisma.progressPhoto.deleteMany({
       where: {
@@ -71,7 +68,7 @@ export async function POST(request: NextRequest) {
     const photo = await prisma.progressPhoto.create({
       data: {
         traineeId: session.user.id,
-        photoUrl: urlData.publicUrl,
+        photoUrl: storagePath,
         date: new Date(validated.date),
         pose: validated.pose,
         notes: validated.notes || null,
@@ -136,7 +133,19 @@ export async function GET(request: NextRequest) {
       orderBy: { date: 'desc' },
     })
 
-    return NextResponse.json({ photos })
+    // Generate signed URLs for each photo
+    const photosWithSignedUrls = await Promise.all(
+      photos.map(async (photo) => {
+        // If photoUrl is already a full URL (legacy data), use it as-is
+        if (photo.photoUrl.startsWith('http')) {
+          return photo
+        }
+        const signedUrl = await getSignedPhotoUrl(photo.photoUrl)
+        return { ...photo, photoUrl: signedUrl || photo.photoUrl }
+      })
+    )
+
+    return NextResponse.json({ photos: photosWithSignedUrls })
   } catch (error) {
     console.error('Error fetching progress photos:', error)
     return NextResponse.json({ error: 'Failed to fetch photos' }, { status: 500 })

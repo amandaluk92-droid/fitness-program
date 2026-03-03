@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { generatePasswordResetToken } from '@/lib/tokens'
 import { sendPasswordResetEmail } from '@/lib/email'
+import { checkRateLimit, AUTH_RATE_LIMIT, getClientIp } from '@/lib/rate-limit'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -9,6 +10,15 @@ const schema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers)
+  const rateLimit = checkRateLimit(`forgot-password:${ip}`, AUTH_RATE_LIMIT)
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } }
+    )
+  }
+
   try {
     const body = await request.json()
     const { email } = schema.parse(body)

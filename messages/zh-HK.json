@@ -6,6 +6,22 @@
     "error": "發生錯誤",
     "back": "返回"
   },
+  "errorBoundary": {
+    "title": "發生錯誤",
+    "description": "發生意外錯誤，請再試一次。",
+    "tryAgain": "再試一次"
+  },
+  "settings": {
+    "title": "設定",
+    "dangerZone": "危險區域",
+    "dangerZoneDescription": "永久刪除您的帳戶及所有相關資料。此操作無法撤銷。",
+    "deleteAccount": "刪除帳戶",
+    "deleteAccountTitle": "您確定要刪除帳戶嗎？",
+    "deleteAccountWarning": "此操作將永久刪除您的所有資料，包括訓練記錄、計劃、進度相片及任何有效訂閱。此操作無法撤銷。",
+    "deleteAccountConfirmPrompt": "輸入 DELETE 以確認",
+    "confirmDelete": "永久刪除帳戶",
+    "deleting": "刪除中..."
+  },
   "landing": {
     "heroTitle1": "教練客戶。",
     "heroTitle2": "追蹤進度。",
@@ -48,6 +64,7 @@
     "accountNamePlaceholder": "我們如何稱呼您",
     "passwordPlaceholder": "至少 6 個字符",
     "invalidCredentials": "電郵或密碼錯誤",
+    "genericError": "發生錯誤，請重試。",
     "dontHaveAccount": "未有帳戶？",
     "alreadyHaveAccount": "已有帳戶？",
     "backToSignUp": "返回註冊",
@@ -301,6 +318,7 @@
       "all": "全部",
       "gbc": "GBC（德國身體組成）",
       "rehab": "損傷康復",
+      "powerlifting": "力量舉",
       "rehabDisclaimer": "僅供參考。學員在開始任何康復計劃前應諮詢醫療專業人士。",
       "loading": "載入範本中...",
       "noTemplates": "未找到範本。",
@@ -309,7 +327,9 @@
       "selectCategory": "類別",
       "selectInjuryType": "損傷類型",
       "duration": "時長",
-      "weeks": "週"
+      "weeks": "週",
+      "tempo": "節奏",
+      "supersetGroup": "超級組"
     },
     "programForm": {
       "programName": "計劃名稱",
@@ -417,6 +437,10 @@
       "targetWeight": "目標重量",
       "restOptional": "休息時間（秒）- 選填",
       "restPlaceholder": "組間休息",
+      "tempoOptional": "節奏 - 選填",
+      "tempoPlaceholder": "例如 3010",
+      "supersetOptional": "超級組 - 選填",
+      "supersetPlaceholder": "例如 A, B, C",
       "noExercisesHint": "尚未添加動作。點擊「添加動作」開始。",
       "day": "第 {day} 天",
       "searchExercise": "搜尋動作示範"

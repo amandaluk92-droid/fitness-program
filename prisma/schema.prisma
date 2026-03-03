@@ -47,6 +47,7 @@ enum PaymentStatus {
 enum TemplateCategory {
   GBC
   REHAB
+  POWERLIFTING
 }
 
 enum PhotoPose {
@@ -96,6 +97,9 @@ model User {
   trainerSubscriptions TrainerSubscription[]
   payments             Payment[]
 
+  // Audit logs
+  auditLogs            AuditLog[]
+
   @@map("users")
 }
 
@@ -142,6 +146,7 @@ model ProgramAssignment {
   trainee User             @relation("TraineeAssignments", fields: [traineeId], references: [id], onDelete: Cascade)
 
   @@unique([programId, traineeId])
+  @@index([traineeId])
   @@map("program_assignments")
 }
 
@@ -155,6 +160,7 @@ model TrainerTraineeConnection {
   trainee User @relation("TraineeConnections", fields: [traineeId], references: [id], onDelete: Cascade)
 
   @@unique([trainerId, traineeId])
+  @@index([traineeId])
   @@map("trainer_trainee_connections")
 }
 
@@ -201,6 +207,8 @@ model ProgramTemplateExercise {
   order            Int      @default(0)
   dayOfWeek        Int? // 0-6 (Sunday-Saturday), null if not day-specific
   workoutDayIndex  Int? // 1-4 for multi-day templates (Day 1, Day 2, etc.)
+  tempo            String?  // GBC tempo notation e.g. "3110" (eccentric-pause-concentric-pause)
+  supersetGroup    String?  // Superset pairing label e.g. "A", "B", "C"
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -221,6 +229,8 @@ model ProgramExercise {
   order            Int      @default(0) // Order within program
   dayOfWeek        Int? // 0-6 (Sunday-Saturday), null if not day-specific
   workoutDayIndex  Int? // 1-4 for multi-day programs (Day 1, Day 2, etc.)
+  tempo            String?
+  supersetGroup    String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -244,6 +254,7 @@ model TrainingSession {
   trainee  User            @relation(fields: [traineeId], references: [id], onDelete: Cascade)
   exercises SessionExercise[]
 
+  @@index([traineeId, date])
   @@map("training_sessions")
 }
 
@@ -274,6 +285,7 @@ model TrainerSubscription {
   billingInterval      BillingInterval
   startDate            DateTime
   endDate              DateTime?
+  trialExpiresAt       DateTime?          // For FREE_TRIAL: when the trial period ends
   stripeSubscriptionId String?
   stripeCustomerId     String?
   createdAt            DateTime           @default(now())
@@ -281,6 +293,7 @@ model TrainerSubscription {
 
   trainer User @relation(fields: [trainerId], references: [id], onDelete: Cascade)
 
+  @@index([trainerId, status])
   @@map("trainer_subscriptions")
 }
 
@@ -324,6 +337,24 @@ model PasswordResetToken {
 
   @@index([userId])
   @@map("password_reset_tokens")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String   // e.g. "LOGIN_SUCCESS", "ACCOUNT_DELETE", "DATA_EXPORT"
+  resource   String?  // e.g. "User", "TrainingSession", "Subscription"
+  resourceId String?
+  metadata   Json?    // Additional context
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
 }
 
 model StripeConfig {

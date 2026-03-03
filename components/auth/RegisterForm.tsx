@@ -67,14 +67,14 @@ export function RegisterForm() {
       const result = await response.json()
 
       if (!response.ok) {
-        setError(result.error || 'Failed to create account')
+        setError(result.error || t('genericError'))
         setIsLoading(false)
         return
       }
 
       router.push('/login?registered=true')
     } catch (err) {
-      setError('An error occurred. Please try again.')
+      setError(t('genericError'))
       setIsLoading(false)
     }
   }

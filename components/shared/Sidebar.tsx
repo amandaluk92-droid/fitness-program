@@ -56,6 +56,7 @@ const trainerNavItems: NavItem[] = [
   { nameKey: 'programs', href: '/trainer/programs', icon: FileText },
   { nameKey: 'trainees', href: '/trainer/trainees', icon: Users },
   { nameKey: 'progress', href: '/trainer/progress', icon: TrendingUp },
+  { nameKey: 'settings', href: '/trainer/settings', icon: Settings },
 ]
 
 const traineeNavItems: NavItem[] = [
@@ -63,6 +64,7 @@ const traineeNavItems: NavItem[] = [
   { nameKey: 'profile', href: '/trainee/profile', icon: User },
   { nameKey: 'sessions', href: '/trainee/sessions', icon: Calendar },
   { nameKey: 'progress', href: '/trainee/progress', icon: TrendingUp },
+  { nameKey: 'settings', href: '/trainee/settings', icon: Settings },
 ]
 
 interface SidebarProps {
@@ -113,7 +115,7 @@ export function Sidebar({ role, userName, paymentsDisabled = false }: SidebarPro
       </div>
 
       <div className="flex-1 p-4">
-        <nav className="space-y-1">
+        <nav className="space-y-1" aria-label="Main navigation">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/')

@@ -49,6 +49,7 @@ export async function POST() {
         billingInterval: 'MONTHLY',
         startDate,
         endDate,
+        trialExpiresAt: endDate,
         stripeSubscriptionId: null,
         stripeCustomerId: null,
       },

@@ -1,9 +1,8 @@
 import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
 
-// Demo mode: in dev or when ENABLE_DEMO_MODE is set, allow unauthenticated; in production require login unless demo enabled
-const isDemoAllowed =
-  process.env.NODE_ENV !== 'production' || process.env.ENABLE_DEMO_MODE === 'true'
+// Demo mode: only in development — never in production
+const isDemoAllowed = process.env.NODE_ENV === 'development'
 
 export default withAuth(
   function middleware(req) {

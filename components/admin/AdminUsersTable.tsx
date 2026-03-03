@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/shared/Button'
+import { useToast } from '@/components/shared/Toast'
 import { ResetPasswordModal } from '@/components/admin/ResetPasswordModal'
 import { Shield, KeyRound } from 'lucide-react'
 
@@ -31,6 +32,7 @@ interface AdminUsersTableProps {
 export function AdminUsersTable({ users }: AdminUsersTableProps) {
   const router = useRouter()
   const t = useTranslations('admin.usersTable')
+  const { showToast } = useToast()
   const [promotingId, setPromotingId] = useState<string | null>(null)
   const [resetTarget, setResetTarget] = useState<{ id: string; name: string } | null>(null)
 
@@ -46,10 +48,10 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
         router.refresh()
       } else {
         const data = await res.json()
-        alert(data.error || t('promoteToAdmin'))
+        showToast(data.error || t('promoteToAdmin'))
       }
-    } catch (e) {
-      alert(t('promoteToAdmin'))
+    } catch {
+      showToast(t('promoteToAdmin'))
     } finally {
       setPromotingId(null)
     }

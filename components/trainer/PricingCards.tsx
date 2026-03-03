@@ -13,6 +13,7 @@ import {
   DISCOUNT_12_MONTHS,
   type BillingIntervalDisplay,
 } from '@/lib/subscription-tiers'
+import { useToast } from '@/components/shared/Toast'
 import type { SubscriptionTier } from '@prisma/client'
 
 const PAID_TIERS = TIER_METADATA.filter((t) => t.tier !== 'FREE_TRIAL')
@@ -32,6 +33,7 @@ export function PricingCards({
 }: PricingCardsProps) {
   const router = useRouter()
   const t = useTranslations('trainer.pricingCards')
+  const { showToast } = useToast()
   const [loadingKey, setLoadingKey] = useState<string | null>(null)
   const [trialLoading, setTrialLoading] = useState(false)
 
@@ -51,10 +53,10 @@ export function PricingCards({
       if (data.url) {
         window.location.href = data.url
       } else {
-        alert(data.error || t('failedCheckout'))
+        showToast(data.error || t('failedCheckout'))
       }
-    } catch (e) {
-      alert(t('failedCheckout'))
+    } catch {
+      showToast(t('failedCheckout'))
     } finally {
       setLoadingKey(null)
     }
@@ -68,10 +70,10 @@ export function PricingCards({
       if (res.ok) {
         router.refresh()
       } else {
-        alert(data.error || t('failedTrial'))
+        showToast(data.error || t('failedTrial'))
       }
-    } catch (e) {
-      alert(t('failedTrial'))
+    } catch {
+      showToast(t('failedTrial'))
     } finally {
       setTrialLoading(false)
     }

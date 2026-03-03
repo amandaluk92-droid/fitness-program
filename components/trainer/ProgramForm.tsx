@@ -96,6 +96,8 @@ export function ProgramForm({ programId, initialData, templateId }: ProgramFormP
                 order: ex.order,
                 dayOfWeek: ex.dayOfWeek,
                 workoutDayIndex: ex.workoutDayIndex,
+                tempo: ex.tempo,
+                supersetGroup: ex.supersetGroup,
               }))
             )
           }
@@ -116,6 +118,8 @@ export function ProgramForm({ programId, initialData, templateId }: ProgramFormP
           order: ex.order,
           dayOfWeek: ex.dayOfWeek,
           workoutDayIndex: ex.workoutDayIndex,
+          tempo: ex.tempo,
+          supersetGroup: ex.supersetGroup,
         }))
       )
     }

@@ -22,12 +22,13 @@ export async function getTrainerActiveSubscription(trainerId: string) {
 
   if (!subscription) return null
 
-  // Expired free trial: treat as no subscription, end assigned programs, keep trainer–trainee connections
-  if (
+  // Expired free trial: check both trialExpiresAt and endDate
+  const trialExpired =
     subscription.tier === 'FREE_TRIAL' &&
-    subscription.endDate &&
-    subscription.endDate < new Date()
-  ) {
+    ((subscription.trialExpiresAt && subscription.trialExpiresAt < new Date()) ||
+     (subscription.endDate && subscription.endDate < new Date()))
+
+  if (trialExpired) {
     await prisma.$transaction([
       prisma.trainerSubscription.update({
         where: { id: subscription.id },
@@ -76,45 +77,65 @@ export async function canTrainerAddTrainee(
     }
   }
 
-  const subscription = await getTrainerActiveSubscription(trainerId)
-  const currentCount = await getTrainerTraineeCount(trainerId)
+  // Use a serializable transaction to prevent TOCTOU race conditions
+  // when multiple concurrent requests try to add trainees
+  return prisma.$transaction(async (tx) => {
+    const subscription = await getTrainerActiveSubscription(trainerId)
 
-  if (!subscription) {
-    return {
-      allowed: false,
-      currentCount,
-      maxTrainees: 0,
-      subscription: null,
+    if (!subscription) {
+      const currentCount = await getTrainerTraineeCountTx(tx, trainerId)
+      return {
+        allowed: false,
+        currentCount,
+        maxTrainees: 0,
+        subscription: null,
+      }
     }
-  }
 
-  const maxTrainees = getMaxTrainees(subscription.tier as SubscriptionTier)
+    const maxTrainees = getMaxTrainees(subscription.tier as SubscriptionTier)
+    const currentCount = await getTrainerTraineeCountTx(tx, trainerId)
 
-  // If trainee already has a program from this trainer, no additional slot used
-  const traineeAlreadyAssigned =
-    traineeId &&
-    (await prisma.programAssignment.findFirst({
-      where: {
-        traineeId,
-        program: { trainerId },
-      },
-    }))
+    // If trainee already has a program from this trainer, no additional slot used
+    if (traineeId) {
+      const traineeAlreadyAssigned = await tx.programAssignment.findFirst({
+        where: {
+          traineeId,
+          program: { trainerId },
+        },
+      })
 
-  if (traineeAlreadyAssigned) {
+      if (traineeAlreadyAssigned) {
+        return {
+          allowed: true,
+          currentCount,
+          maxTrainees,
+          subscription,
+        }
+      }
+    }
+
+    const allowed = currentCount < maxTrainees
+
     return {
-      allowed: true,
+      allowed,
       currentCount,
       maxTrainees,
       subscription,
     }
-  }
+  }, { isolationLevel: 'Serializable' })
+}
 
-  const allowed = currentCount < maxTrainees
-
-  return {
-    allowed,
-    currentCount,
-    maxTrainees,
-    subscription,
-  }
+/** Transaction-aware version of getTrainerTraineeCount */
+async function getTrainerTraineeCountTx(
+  tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+  trainerId: string
+): Promise<number> {
+  const result = await tx.programAssignment.findMany({
+    where: {
+      program: { trainerId },
+    },
+    select: { traineeId: true },
+    distinct: ['traineeId'],
+  })
+  return result.length
 }

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/shared/Button'
+import { useToast } from '@/components/shared/Toast'
 
 interface ExtendTrialButtonProps {
   subscriptionId: string
@@ -16,6 +17,7 @@ export function ExtendTrialButton({
 }: ExtendTrialButtonProps) {
   const router = useRouter()
   const t = useTranslations('admin.extendTrial')
+  const { showToast } = useToast()
   const [loading, setLoading] = useState(false)
 
   const handleExtend = async (days: number) => {
@@ -33,10 +35,10 @@ export function ExtendTrialButton({
       if (res.ok) {
         router.refresh()
       } else {
-        alert(data.error || t('extend7Days'))
+        showToast(data.error || t('extend7Days'))
       }
-    } catch (e) {
-      alert(t('extend7Days'))
+    } catch {
+      showToast(t('extend7Days'))
     } finally {
       setLoading(false)
     }

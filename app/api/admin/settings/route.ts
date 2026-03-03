@@ -101,8 +101,8 @@ export async function PATCH(request: NextRequest) {
     })
 
     const updatePayload: {
-      stripeSecretKey?: string
-      stripeWebhookSecret?: string
+      stripeSecretKey?: string | null
+      stripeWebhookSecret?: string | null
       stripePriceIdStarter?: string | null
       stripePriceIdGrowth?: string | null
       stripePriceIdStudio?: string | null
