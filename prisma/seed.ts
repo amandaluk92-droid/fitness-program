@@ -65,6 +65,31 @@ async function main() {
     { name: 'Neck Retraction (Chin Tuck)', description: 'Cervical retraction exercise for neck stability', muscleGroup: 'Neck' },
     { name: 'Neck Side Bend Stretch', description: 'Lateral neck stretch for tension relief', muscleGroup: 'Neck' },
     { name: 'Shoulder Pendulum', description: 'Passive shoulder mobility exercise using gravity', muscleGroup: 'Shoulders' },
+    // Rehab new (HEP2go gap analysis)
+    // Upper Body
+    { name: 'Sleeper Stretch', description: 'Side-lying internal rotation stretch for posterior shoulder tightness', muscleGroup: 'Shoulders' },
+    { name: 'Cross-Body Shoulder Stretch', description: 'Horizontal adduction stretch for posterior capsule mobility', muscleGroup: 'Shoulders' },
+    { name: 'Doorway Pec Stretch', description: 'Chest stretch using a doorframe for pectoral and anterior shoulder flexibility', muscleGroup: 'Chest' },
+    { name: 'Isometric Shoulder External Rotation', description: 'Static hold against wall or doorframe for early-stage rotator cuff activation', muscleGroup: 'Shoulders' },
+    { name: 'Median Nerve Glide', description: 'Sequential hand and wrist positions to mobilize the median nerve for carpal tunnel relief', muscleGroup: 'Arms' },
+    // Spine / Core
+    { name: 'McKenzie Press-Up', description: 'Prone press-up for lumbar extension and disc centralization', muscleGroup: 'Core' },
+    { name: 'Knee-to-Chest Stretch', description: 'Supine single or double knee pull for lumbar flexion and lower back relief', muscleGroup: 'Core' },
+    { name: 'Piriformis Stretch', description: 'Figure-four or cross-leg stretch targeting the piriformis and deep hip rotators', muscleGroup: 'Hips' },
+    { name: 'Sciatic Nerve Glide', description: 'Seated nerve flossing technique to mobilize the sciatic nerve', muscleGroup: 'Legs' },
+    { name: 'Thoracic Extension (Foam Roller)', description: 'Upper back extension over a foam roller for thoracic spine mobility', muscleGroup: 'Core' },
+    { name: 'Levator Scapulae Stretch', description: 'Angled neck stretch targeting the levator scapulae muscle for neck and shoulder tension', muscleGroup: 'Neck' },
+    // Lower Body
+    { name: 'Single-Leg Balance', description: 'Standing single-leg balance hold for proprioception and ankle stability', muscleGroup: 'Legs' },
+    { name: 'Tibialis Anterior Raise', description: 'Toe raises against resistance for shin splint prevention and tibialis anterior strengthening', muscleGroup: 'Legs' },
+    { name: 'Wall Sit', description: 'Isometric wall squat hold for quadriceps endurance and knee stability', muscleGroup: 'Legs' },
+    { name: 'Lateral Band Walk', description: 'Side-stepping with resistance band for hip abductor and glute medius activation', muscleGroup: 'Hips' },
+    { name: 'Standing Hip Flexor Stretch', description: 'Half-kneeling or standing lunge stretch for hip flexor and psoas flexibility', muscleGroup: 'Hips' },
+    { name: 'Pigeon Stretch', description: 'Deep hip external rotation stretch for piriformis and hip capsule mobility', muscleGroup: 'Hips' },
+    // Hand / Wrist
+    { name: 'Tendon Glide (Hand)', description: 'Sequential finger positions to mobilize flexor tendons for carpal tunnel and hand stiffness', muscleGroup: 'Arms' },
+    { name: 'Wrist Pronation/Supination', description: 'Forearm rotation exercise with light weight for elbow and wrist rehab', muscleGroup: 'Arms' },
+    { name: 'Grip Strengthening (Towel Squeeze)', description: 'Squeezing a rolled towel for grip and forearm strength rehabilitation', muscleGroup: 'Arms' },
     // Powerlifting new
     { name: 'Front Squat', description: 'Front-loaded barbell squat for quad emphasis', muscleGroup: 'Legs' },
     { name: 'Pause Squat', description: 'Squat with pause at bottom for strength out of the hole', muscleGroup: 'Legs' },
@@ -271,12 +296,12 @@ async function main() {
     ]
   )
 
-  // ACL Rehab (Post-op) - kept as-is
+  // ACL Rehab (Post-op) - enhanced with proprioception and isometric work
   await seedTemplate(
     'template-rehab-acl',
     {
       name: 'ACL Rehab (Post-op)',
-      description: 'Phased rehabilitation: ROM, strengthening, proprioception. Leg raises, mini-squats, lunges, step-downs. Consult healthcare provider.',
+      description: 'Phased rehabilitation: ROM, strengthening, proprioception. Leg raises, mini-squats, lunges, step-downs, single-leg balance, wall sit. Consult healthcare provider.',
       duration: 14,
       category: 'REHAB',
       injuryType: 'ACL',
@@ -288,15 +313,17 @@ async function main() {
       { exerciseId: e('Hip Bridge'), sets: 3, reps: 12, restTimeSeconds: 90, order: 3 },
       { exerciseId: e('Step-down'), sets: 3, reps: 10, restTimeSeconds: 90, order: 4 },
       { exerciseId: e('Lunge'), sets: 3, reps: 10, restTimeSeconds: 90, order: 5 },
+      { exerciseId: e('Single-Leg Balance'), sets: 3, reps: 10, restTimeSeconds: 60, order: 6 },
+      { exerciseId: e('Wall Sit'), sets: 3, reps: 10, restTimeSeconds: 90, order: 7 },
     ]
   )
 
-  // Lower Back Rehab - kept as-is
+  // Lower Back Rehab - enhanced with piriformis stretch and knee-to-chest
   await seedTemplate(
     'template-rehab-lowerback',
     {
       name: 'Lower Back Rehab',
-      description: 'Core stability and lumbar support. Cat-cow, bird dog, bridges, dead bug. Consult healthcare provider before starting.',
+      description: 'Core stability and lumbar support. Cat-cow, bird dog, bridges, dead bug, piriformis stretch, knee-to-chest. Consult healthcare provider before starting.',
       duration: 5,
       category: 'REHAB',
       injuryType: 'Lower Back',
@@ -306,6 +333,8 @@ async function main() {
       { exerciseId: e('Bird Dog'), sets: 3, reps: 12, restTimeSeconds: 60, order: 1 },
       { exerciseId: e('Hip Bridge'), sets: 3, reps: 12, restTimeSeconds: 60, order: 2 },
       { exerciseId: e('Dead Bug'), sets: 3, reps: 12, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Piriformis Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 4 },
+      { exerciseId: e('Knee-to-Chest Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 5 },
     ]
   )
 
@@ -330,12 +359,12 @@ async function main() {
 
   // ─── NEW REHAB TEMPLATES ───────────────────────────────────────────────────
 
-  // Ankle Rehab
+  // Ankle Rehab - enhanced with proprioception
   await seedTemplate(
     'template-rehab-ankle',
     {
       name: 'Ankle Rehab',
-      description: 'Ankle mobility and strength restoration. Alphabet exercises, towel curls, single-leg calf raises, mini squats. Consult healthcare provider before starting.',
+      description: 'Ankle mobility and strength restoration. Alphabet exercises, towel curls, single-leg calf raises, mini squats, single-leg balance. Consult healthcare provider before starting.',
       duration: 4,
       category: 'REHAB',
       injuryType: 'Ankle',
@@ -345,6 +374,7 @@ async function main() {
       { exerciseId: e('Towel Curl (Foot)'), sets: 3, reps: 15, restTimeSeconds: 60, order: 1 },
       { exerciseId: e('Calf Raise (Single Leg)'), sets: 3, reps: 12, restTimeSeconds: 60, order: 2 },
       { exerciseId: e('Mini Squat'), sets: 3, reps: 12, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Single-Leg Balance'), sets: 3, reps: 10, restTimeSeconds: 60, order: 4 },
     ]
   )
 
@@ -459,12 +489,12 @@ async function main() {
     ]
   )
 
-  // Tennis Elbow Rehab
+  // Tennis Elbow Rehab - enhanced with grip and forearm work
   await seedTemplate(
     'template-rehab-tennis-elbow',
     {
       name: 'Tennis Elbow Rehab',
-      description: 'Lateral epicondylitis rehab. Wrist extensor stretches, eccentric wrist extensions, band rotations. Consult healthcare provider before starting.',
+      description: 'Lateral epicondylitis rehab. Wrist extensor stretches, eccentric wrist extensions, band rotations, grip strengthening, forearm rotation. Consult healthcare provider before starting.',
       duration: 5,
       category: 'REHAB',
       injuryType: 'Tennis Elbow',
@@ -473,15 +503,17 @@ async function main() {
       { exerciseId: e('Wrist Extensor Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
       { exerciseId: e('Eccentric Wrist Extension'), sets: 3, reps: 15, restTimeSeconds: 60, order: 1 },
       { exerciseId: e('Band External Rotation'), sets: 3, reps: 12, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Grip Strengthening (Towel Squeeze)'), sets: 3, reps: 15, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Wrist Pronation/Supination'), sets: 3, reps: 12, restTimeSeconds: 60, order: 4 },
     ]
   )
 
-  // Golfer's Elbow Rehab
+  // Golfer's Elbow Rehab - enhanced with grip and forearm work
   await seedTemplate(
     'template-rehab-golfers-elbow',
     {
       name: "Golfer's Elbow Rehab",
-      description: 'Medial epicondylitis rehab. Wrist flexor stretches, eccentric wrist curls, band rotations. Consult healthcare provider before starting.',
+      description: 'Medial epicondylitis rehab. Wrist flexor stretches, eccentric wrist curls, band rotations, grip strengthening, forearm rotation. Consult healthcare provider before starting.',
       duration: 5,
       category: 'REHAB',
       injuryType: "Golfer's Elbow",
@@ -490,6 +522,8 @@ async function main() {
       { exerciseId: e('Wrist Flexor Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
       { exerciseId: e('Eccentric Wrist Curl'), sets: 3, reps: 15, restTimeSeconds: 60, order: 1 },
       { exerciseId: e('Band External Rotation'), sets: 3, reps: 12, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Grip Strengthening (Towel Squeeze)'), sets: 3, reps: 15, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Wrist Pronation/Supination'), sets: 3, reps: 12, restTimeSeconds: 60, order: 4 },
     ]
   )
 
@@ -526,6 +560,199 @@ async function main() {
       { exerciseId: e('Neck Retraction (Chin Tuck)'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
       { exerciseId: e('Neck Side Bend Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 1 },
       { exerciseId: e('Scapular Retraction'), sets: 3, reps: 15, restTimeSeconds: 60, order: 2 },
+    ]
+  )
+
+  // ─── NEW REHAB TEMPLATES (HEP2go Gap Analysis) ─────────────────────────────
+
+  // Sciatica Rehab
+  await seedTemplate(
+    'template-rehab-sciatica',
+    {
+      name: 'Sciatica Rehab',
+      description: 'Nerve mobilization and lumbar support for sciatic pain. Piriformis stretch, sciatic nerve glide, knee-to-chest, bird dog, McKenzie press-up. Consult healthcare provider before starting.',
+      duration: 6,
+      category: 'REHAB',
+      injuryType: 'Sciatica',
+    },
+    [
+      { exerciseId: e('Piriformis Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
+      { exerciseId: e('Sciatic Nerve Glide'), sets: 3, reps: 10, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Knee-to-Chest Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Bird Dog'), sets: 3, reps: 12, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('McKenzie Press-Up'), sets: 3, reps: 10, restTimeSeconds: 60, order: 4 },
+    ]
+  )
+
+  // Hip Bursitis Rehab
+  await seedTemplate(
+    'template-rehab-hip-bursitis',
+    {
+      name: 'Hip Bursitis Rehab',
+      description: 'Hip abductor strengthening and flexibility for trochanteric bursitis. Clam shells, lateral band walks, pigeon stretch, bridges, hip flexor stretch. Consult healthcare provider before starting.',
+      duration: 5,
+      category: 'REHAB',
+      injuryType: 'Hip Bursitis',
+    },
+    [
+      { exerciseId: e('Clam Shell'), sets: 3, reps: 15, restTimeSeconds: 60, order: 0 },
+      { exerciseId: e('Lateral Band Walk'), sets: 3, reps: 12, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Pigeon Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Hip Bridge'), sets: 3, reps: 12, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Standing Hip Flexor Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 4 },
+    ]
+  )
+
+  // Ankle Sprain Rehab
+  await seedTemplate(
+    'template-rehab-ankle-sprain',
+    {
+      name: 'Ankle Sprain Rehab',
+      description: 'Proprioception-focused ankle sprain recovery. Ankle alphabet, single-leg balance, calf raises, towel curls, mini squats. Consult healthcare provider before starting.',
+      duration: 5,
+      category: 'REHAB',
+      injuryType: 'Ankle Sprain',
+    },
+    [
+      { exerciseId: e('Ankle Alphabet'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
+      { exerciseId: e('Single-Leg Balance'), sets: 3, reps: 10, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Calf Raise (Single Leg)'), sets: 3, reps: 12, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Towel Curl (Foot)'), sets: 3, reps: 15, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Mini Squat'), sets: 3, reps: 12, restTimeSeconds: 60, order: 4 },
+    ]
+  )
+
+  // MCL Injury Rehab
+  await seedTemplate(
+    'template-rehab-mcl',
+    {
+      name: 'MCL Injury Rehab',
+      description: 'Medial collateral ligament recovery. Quad sets, straight leg raises, mini squats, bridges, wall sit, step-downs. Consult healthcare provider before starting.',
+      duration: 6,
+      category: 'REHAB',
+      injuryType: 'MCL',
+    },
+    [
+      { exerciseId: e('Quad Set'), sets: 3, reps: 15, restTimeSeconds: 90, order: 0 },
+      { exerciseId: e('Straight Leg Raise'), sets: 3, reps: 12, restTimeSeconds: 90, order: 1 },
+      { exerciseId: e('Mini Squat'), sets: 3, reps: 12, restTimeSeconds: 90, order: 2 },
+      { exerciseId: e('Hip Bridge'), sets: 3, reps: 12, restTimeSeconds: 90, order: 3 },
+      { exerciseId: e('Wall Sit'), sets: 3, reps: 10, restTimeSeconds: 90, order: 4 },
+      { exerciseId: e('Step-down'), sets: 3, reps: 10, restTimeSeconds: 90, order: 5 },
+    ]
+  )
+
+  // Carpal Tunnel Rehab
+  await seedTemplate(
+    'template-rehab-carpal-tunnel',
+    {
+      name: 'Carpal Tunnel Rehab',
+      description: 'Nerve and tendon gliding for carpal tunnel syndrome. Median nerve glide, tendon glide, wrist pronation/supination, grip strengthening. Consult healthcare provider before starting.',
+      duration: 4,
+      category: 'REHAB',
+      injuryType: 'Carpal Tunnel',
+    },
+    [
+      { exerciseId: e('Median Nerve Glide'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
+      { exerciseId: e('Tendon Glide (Hand)'), sets: 3, reps: 10, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Wrist Pronation/Supination'), sets: 3, reps: 12, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Grip Strengthening (Towel Squeeze)'), sets: 3, reps: 15, restTimeSeconds: 60, order: 3 },
+    ]
+  )
+
+  // Spinal Stenosis Rehab
+  await seedTemplate(
+    'template-rehab-spinal-stenosis',
+    {
+      name: 'Spinal Stenosis Rehab',
+      description: 'Flexion-based program for spinal stenosis. Knee-to-chest, cat-cow, dead bug, bridges, hip flexor stretch. Consult healthcare provider before starting.',
+      duration: 6,
+      category: 'REHAB',
+      injuryType: 'Spinal Stenosis',
+    },
+    [
+      { exerciseId: e('Knee-to-Chest Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
+      { exerciseId: e('Cat-Cow'), sets: 3, reps: 10, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Dead Bug'), sets: 3, reps: 12, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Hip Bridge'), sets: 3, reps: 12, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Standing Hip Flexor Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 4 },
+    ]
+  )
+
+  // Shin Splints Rehab
+  await seedTemplate(
+    'template-rehab-shin-splints',
+    {
+      name: 'Shin Splints Rehab',
+      description: 'Tibialis anterior strengthening and calf balance for shin splints. Tibialis raises, calf raises, ankle alphabet, wall sit. Consult healthcare provider before starting.',
+      duration: 4,
+      category: 'REHAB',
+      injuryType: 'Shin Splints',
+    },
+    [
+      { exerciseId: e('Tibialis Anterior Raise'), sets: 3, reps: 15, restTimeSeconds: 60, order: 0 },
+      { exerciseId: e('Calf Raise (Single Leg)'), sets: 3, reps: 12, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Ankle Alphabet'), sets: 3, reps: 10, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Wall Sit'), sets: 3, reps: 10, restTimeSeconds: 60, order: 3 },
+    ]
+  )
+
+  // Thoracic / Postural Rehab
+  await seedTemplate(
+    'template-rehab-thoracic-postural',
+    {
+      name: 'Thoracic/Postural Rehab',
+      description: 'Desk worker posture correction. Thoracic extension, doorway pec stretch, scapular retraction, chin tuck, prone Y/T. Consult healthcare provider before starting.',
+      duration: 4,
+      category: 'REHAB',
+      injuryType: 'Postural/Thoracic',
+    },
+    [
+      { exerciseId: e('Thoracic Extension (Foam Roller)'), sets: 3, reps: 10, restTimeSeconds: 60, order: 0 },
+      { exerciseId: e('Doorway Pec Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Scapular Retraction'), sets: 3, reps: 15, restTimeSeconds: 60, order: 2 },
+      { exerciseId: e('Neck Retraction (Chin Tuck)'), sets: 3, reps: 10, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Prone Y/T'), sets: 3, reps: 12, restTimeSeconds: 60, order: 4 },
+    ]
+  )
+
+  // Post Hip Replacement Rehab
+  await seedTemplate(
+    'template-rehab-hip-replacement',
+    {
+      name: 'Post Hip Replacement Rehab',
+      description: 'Structured recovery after total hip replacement. Bridges, clam shells, leg raises, hip flexor stretch, mini squats, single-leg balance. Consult healthcare provider before starting.',
+      duration: 8,
+      category: 'REHAB',
+      injuryType: 'Hip Replacement',
+    },
+    [
+      { exerciseId: e('Hip Bridge'), sets: 3, reps: 12, restTimeSeconds: 90, order: 0 },
+      { exerciseId: e('Clam Shell'), sets: 3, reps: 15, restTimeSeconds: 60, order: 1 },
+      { exerciseId: e('Straight Leg Raise'), sets: 3, reps: 12, restTimeSeconds: 90, order: 2 },
+      { exerciseId: e('Standing Hip Flexor Stretch'), sets: 3, reps: 10, restTimeSeconds: 60, order: 3 },
+      { exerciseId: e('Mini Squat'), sets: 3, reps: 12, restTimeSeconds: 90, order: 4 },
+      { exerciseId: e('Single-Leg Balance'), sets: 3, reps: 10, restTimeSeconds: 60, order: 5 },
+    ]
+  )
+
+  // Post Total Knee Replacement Rehab
+  await seedTemplate(
+    'template-rehab-knee-replacement',
+    {
+      name: 'Post Total Knee Replacement Rehab',
+      description: 'Structured recovery after total knee replacement. Quad sets, leg raises, mini squats, bridges, step-downs, wall sit. Consult healthcare provider before starting.',
+      duration: 10,
+      category: 'REHAB',
+      injuryType: 'Knee Replacement',
+    },
+    [
+      { exerciseId: e('Quad Set'), sets: 3, reps: 15, restTimeSeconds: 90, order: 0 },
+      { exerciseId: e('Straight Leg Raise'), sets: 3, reps: 12, restTimeSeconds: 90, order: 1 },
+      { exerciseId: e('Mini Squat'), sets: 3, reps: 12, restTimeSeconds: 90, order: 2 },
+      { exerciseId: e('Hip Bridge'), sets: 3, reps: 12, restTimeSeconds: 90, order: 3 },
+      { exerciseId: e('Step-down'), sets: 3, reps: 10, restTimeSeconds: 90, order: 4 },
+      { exerciseId: e('Wall Sit'), sets: 3, reps: 10, restTimeSeconds: 90, order: 5 },
     ]
   )
 
