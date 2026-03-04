@@ -12,6 +12,7 @@ interface Exercise {
   id: string
   name: string
   description?: string
+  imageUrl?: string
 }
 
 interface ExerciseLogCardProps {
@@ -77,6 +78,13 @@ export function ExerciseLogCard({ exercise, programExercise, onUpdate }: Exercis
 
   return (
     <Card>
+      {exercise.imageUrl && (
+        <img
+          src={exercise.imageUrl}
+          alt={exercise.name}
+          className="w-full h-40 object-cover rounded-lg mb-4"
+        />
+      )}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">{exercise.name}</h3>
         <button

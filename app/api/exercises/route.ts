@@ -7,6 +7,7 @@ const exerciseSchema = z.object({
   name: z.string().min(1, 'Exercise name is required'),
   description: z.string().optional(),
   muscleGroup: z.string().optional(),
+  imageUrl: z.string().url().optional(),
 })
 
 export async function POST(request: NextRequest) {

@@ -96,11 +96,20 @@ export default async function ProgramDetailPage({
                     <div className="space-y-4 pl-4 border-l-2 border-gray-200">
                       {dayMap.get(day)!.map((exercise, index) => (
                         <div key={exercise.id} className="p-4 bg-gray-50 rounded-lg">
+                          {exercise.exercise.imageUrl && (
+                            <img
+                              src={exercise.exercise.imageUrl}
+                              alt={exercise.exercise.name}
+                              className="w-full h-40 object-cover rounded-lg mb-3"
+                            />
+                          )}
                           <div className="flex items-start justify-between mb-2">
                             <h5 className="font-semibold text-gray-900">
                               {index + 1}. {exercise.exercise.name}
                             </h5>
-                            <ProgramExerciseDemoButton exerciseName={exercise.exercise.name} />
+                            {!exercise.exercise.imageUrl && (
+                              <ProgramExerciseDemoButton exerciseName={exercise.exercise.name} />
+                            )}
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                             <div>
@@ -136,11 +145,20 @@ export default async function ProgramDetailPage({
             <div className="space-y-4">
               {program.exercises.map((exercise, index) => (
                 <div key={exercise.id} className="p-4 bg-gray-50 rounded-lg">
+                  {exercise.exercise.imageUrl && (
+                    <img
+                      src={exercise.exercise.imageUrl}
+                      alt={exercise.exercise.name}
+                      className="w-full h-40 object-cover rounded-lg mb-3"
+                    />
+                  )}
                   <div className="flex items-start justify-between mb-2">
                     <h4 className="font-semibold text-gray-900">
                       {index + 1}. {exercise.exercise.name}
                     </h4>
-                    <ProgramExerciseDemoButton exerciseName={exercise.exercise.name} />
+                    {!exercise.exercise.imageUrl && (
+                      <ProgramExerciseDemoButton exerciseName={exercise.exercise.name} />
+                    )}
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>

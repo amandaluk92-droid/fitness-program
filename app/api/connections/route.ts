@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendConnectionEmail } from '@/lib/email'
 import { z } from 'zod'
 
 const connectSchema = z.object({
@@ -52,6 +53,22 @@ export async function POST(request: NextRequest) {
       const connection = await prisma.trainerTraineeConnection.create({
         data: { trainerId, traineeId },
       })
+
+      sendConnectionEmail({
+        to: otherUser.email,
+        userId: otherUser.id,
+        userName: otherUser.name,
+        otherName: session.user.name ?? 'A trainer',
+        otherRole: 'trainer',
+      }).catch(() => {})
+      sendConnectionEmail({
+        to: session.user.email!,
+        userId: session.user.id,
+        userName: session.user.name ?? 'Trainer',
+        otherName: otherUser.name,
+        otherRole: 'trainee',
+      }).catch(() => {})
+
       return NextResponse.json({ message: 'Connected', connection }, { status: 201 })
     }
 
@@ -78,6 +95,22 @@ export async function POST(request: NextRequest) {
       const connection = await prisma.trainerTraineeConnection.create({
         data: { trainerId, traineeId },
       })
+
+      sendConnectionEmail({
+        to: otherUser.email,
+        userId: otherUser.id,
+        userName: otherUser.name,
+        otherName: session.user.name ?? 'A trainee',
+        otherRole: 'trainee',
+      }).catch(() => {})
+      sendConnectionEmail({
+        to: session.user.email!,
+        userId: session.user.id,
+        userName: session.user.name ?? 'Trainee',
+        otherName: otherUser.name,
+        otherRole: 'trainer',
+      }).catch(() => {})
+
       return NextResponse.json({ message: 'Connected', connection }, { status: 201 })
     }
 

@@ -20,7 +20,12 @@
     "deleteAccountWarning": "This will permanently delete all your data including training sessions, programs, progress photos, and any active subscriptions. This action cannot be undone.",
     "deleteAccountConfirmPrompt": "Type DELETE to confirm",
     "confirmDelete": "Permanently Delete Account",
-    "deleting": "Deleting..."
+    "deleting": "Deleting...",
+    "notifications": {
+      "title": "Notifications",
+      "emailNotifications": "Email Notifications",
+      "emailNotificationsDescription": "Receive emails for program assignments, session logs, and new connections."
+    }
   },
   "landing": {
     "heroTitle1": "Coach clients.",

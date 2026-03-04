@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendSessionLoggedEmail } from '@/lib/email'
 import { z } from 'zod'
 
 const sessionSchema = z.object({
@@ -70,10 +71,24 @@ export async function POST(request: NextRequest) {
           select: {
             id: true,
             name: true,
+            trainer: {
+              select: { id: true, name: true, email: true },
+            },
           },
         },
       },
     })
+
+    if (trainingSession.program.trainer) {
+      const { trainer } = trainingSession.program
+      sendSessionLoggedEmail({
+        to: trainer.email,
+        trainerId: trainer.id,
+        trainerName: trainer.name,
+        traineeName: session.user.name ?? 'A trainee',
+        programName: trainingSession.program.name,
+      }).catch(() => {})
+    }
 
     return NextResponse.json({ session: trainingSession }, { status: 201 })
   } catch (error) {

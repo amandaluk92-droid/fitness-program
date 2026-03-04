@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { checkRateLimit, AUTH_RATE_LIMIT, getClientIp } from '@/lib/rate-limit'
+import { sendWelcomeEmail } from '@/lib/email'
 import { z } from 'zod'
 
 const registerSchema = z.object({
@@ -63,6 +64,8 @@ export async function POST(request: NextRequest) {
         role: true,
       },
     })
+
+    sendWelcomeEmail({ to: user.email, userName: user.name }).catch(() => {})
 
     return NextResponse.json({ user }, { status: 201 })
   } catch (error) {

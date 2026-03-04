@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { canTrainerAddTrainee } from '@/lib/trainer-limits'
+import { sendProgramAssignedEmail } from '@/lib/email'
 import { z } from 'zod'
 
 const assignSchema = z.object({
@@ -67,6 +68,14 @@ export async function POST(
     await prisma.programAssignment.create({
       data: { programId, traineeId },
     })
+
+    sendProgramAssignedEmail({
+      to: trainee.email,
+      traineeId: trainee.id,
+      traineeName: trainee.name,
+      trainerName: session.user.name ?? 'Your trainer',
+      programName: program.name,
+    }).catch(() => {})
 
     return NextResponse.json({ success: true }, { status: 201 })
   } catch (error) {

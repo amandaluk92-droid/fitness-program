@@ -20,7 +20,12 @@
     "deleteAccountWarning": "此操作将永久删除您的所有数据，包括训练记录、计划、进度照片及任何有效订阅。此操作无法撤销。",
     "deleteAccountConfirmPrompt": "输入 DELETE 以确认",
     "confirmDelete": "永久删除账户",
-    "deleting": "删除中..."
+    "deleting": "删除中...",
+    "notifications": {
+      "title": "通知",
+      "emailNotifications": "邮件通知",
+      "emailNotificationsDescription": "接收有关计划分配、训练记录和新连接的邮件通知。"
+    }
   },
   "landing": {
     "heroTitle1": "教练客户。",
