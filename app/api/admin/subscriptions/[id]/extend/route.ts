@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { requireAdmin } from '@/lib/admin'
 import { prisma } from '@/lib/prisma'
+import { logAuditEvent } from '@/lib/audit-log'
 import { z } from 'zod'
 
 const bodySchema = z.object({
@@ -47,6 +48,14 @@ export async function PATCH(
       where: { id },
       data: { endDate: newEnd, updatedAt: new Date() },
     })
+
+    logAuditEvent({
+      userId: session!.user.id,
+      action: 'ADMIN_TRIAL_EXTEND',
+      resource: 'TrainerSubscription',
+      resourceId: id,
+      metadata: { extendDays, newEndDate: updated.endDate },
+    }).catch(() => {})
 
     return NextResponse.json({
       subscription: {

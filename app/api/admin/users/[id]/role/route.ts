@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { requireAdmin } from '@/lib/admin'
 import { prisma } from '@/lib/prisma'
+import { logAuditEvent } from '@/lib/audit-log'
 import { z } from 'zod'
 
 const roleSchema = z.object({
@@ -26,6 +27,14 @@ export async function PATCH(
       data: { role },
       select: { id: true, email: true, name: true, role: true },
     })
+
+    logAuditEvent({
+      userId: session!.user.id,
+      action: 'ADMIN_USER_ROLE_CHANGE',
+      resource: 'User',
+      resourceId: id,
+      metadata: { newRole: role, userName: user.name },
+    }).catch(() => {})
 
     return NextResponse.json({ user })
   } catch (error) {

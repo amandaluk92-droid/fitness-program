@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { Card } from '@/components/shared/Card'
 import { formatDate } from '@/lib/utils'
 import { User, Calendar } from 'lucide-react'
+import { DisconnectButton } from '@/components/shared/DisconnectButton'
 
 interface Trainee {
   id: string
@@ -36,6 +37,7 @@ export function TraineeList({ trainees }: TraineeListProps) {
         <div className="text-center py-8">
           <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-500">{t('noConnectedTrainees')}</p>
+          <p className="text-sm text-gray-400 mt-2">{t('connectHint')}</p>
         </div>
       </Card>
     )
@@ -55,7 +57,10 @@ export function TraineeList({ trainees }: TraineeListProps) {
                   <h3 className="text-lg font-semibold text-gray-900">{trainee.name}</h3>
                   <p className="text-sm text-gray-500">{trainee.email}</p>
                 </div>
-                <User className="h-8 w-8 text-primary-500" />
+                <div className="flex items-center gap-2">
+                  <DisconnectButton email={trainee.email} />
+                  <User className="h-8 w-8 text-primary-500" />
+                </div>
               </div>
 
               <div className="space-y-2">

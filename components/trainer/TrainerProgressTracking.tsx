@@ -246,6 +246,32 @@ export function ProgressTracking({ traineeId, trainerId }: TrainerProgressTracki
           </div>
         </Card>
       )}
+
+      {/* Personal Records */}
+      {progressData?.personalRecords?.length > 0 && (
+        <Card title={t('personalRecords')}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {progressData.personalRecords.slice(0, 9).map((pr: any) => (
+              <div key={pr.exerciseId} className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-gray-900">{pr.exerciseName}</p>
+                <p className="text-lg font-bold text-primary-600">{pr.maxWeight} kg</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Adherence */}
+      {progressData?.adherenceRate !== undefined && (
+        <Card title={t('adherence')}>
+          <div className="flex items-center gap-4">
+            <div className="text-3xl font-bold text-primary-600">{progressData.adherenceRate}%</div>
+            <div>
+              <p className="text-sm text-gray-600">{t('adherenceDesc')}</p>
+            </div>
+          </div>
+        </Card>
+      )}
     </div>
   )
 }

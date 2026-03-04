@@ -5,23 +5,38 @@ import { Card } from '@/components/shared/Card'
 import { prisma } from '@/lib/prisma'
 import { formatDate, formatAmountWithCurrency } from '@/lib/utils'
 import { ExtendTrialButton } from '@/components/admin/ExtendTrialButton'
+import { Pagination } from '@/components/admin/Pagination'
 
-async function getAdminSubscriptions() {
-  return prisma.trainerSubscription.findMany({
-    include: {
-      trainer: { select: { id: true, name: true, email: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  })
+async function getAdminSubscriptions(page = 1, limit = 50) {
+  const skip = (page - 1) * limit
+  const [subscriptions, total] = await Promise.all([
+    prisma.trainerSubscription.findMany({
+      include: {
+        trainer: { select: { id: true, name: true, email: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.trainerSubscription.count(),
+  ])
+  return { subscriptions, total }
 }
 
-export default async function AdminSubscriptionsPage() {
+export default async function AdminSubscriptionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
   const session = await getSession()
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/trainee/dashboard')
   }
 
-  const subscriptions = await getAdminSubscriptions()
+  const params = await searchParams
+  const page = Math.max(1, parseInt(params.page || '1'))
+  const limit = 50
+  const { subscriptions, total } = await getAdminSubscriptions(page, limit)
   const now = new Date()
   const activeFreeTrials = subscriptions.filter(
     (s) =>
@@ -131,6 +146,7 @@ export default async function AdminSubscriptionsPage() {
             </table>
           </div>
         )}
+        <Pagination total={total} page={page} limit={limit} />
       </Card>
     </div>
   )

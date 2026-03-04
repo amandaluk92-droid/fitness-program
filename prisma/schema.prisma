@@ -136,6 +136,7 @@ model TrainingProgram {
   exercises        ProgramExercise[]
   sessions         TrainingSession[]
 
+  @@index([trainerId])
   @@map("training_programs")
 }
 
@@ -259,6 +260,7 @@ model TrainingSession {
   exercises SessionExercise[]
 
   @@index([traineeId, date])
+  @@index([programId])
   @@map("training_sessions")
 }
 
@@ -276,6 +278,7 @@ model SessionExercise {
   session  TrainingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   exercise Exercise         @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 
+  @@index([sessionId])
   @@map("session_exercises")
 }
 
@@ -313,6 +316,7 @@ model Payment {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("payments")
 }
 

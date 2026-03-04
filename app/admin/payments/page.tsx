@@ -4,23 +4,38 @@ import { getTranslations } from 'next-intl/server'
 import { Card } from '@/components/shared/Card'
 import { prisma } from '@/lib/prisma'
 import { formatDate, formatAmountWithCurrency } from '@/lib/utils'
+import { Pagination } from '@/components/admin/Pagination'
 
-async function getAdminPayments() {
-  return prisma.payment.findMany({
-    include: {
-      user: { select: { id: true, name: true, email: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  })
+async function getAdminPayments(page = 1, limit = 50) {
+  const skip = (page - 1) * limit
+  const [payments, total] = await Promise.all([
+    prisma.payment.findMany({
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.payment.count(),
+  ])
+  return { payments, total }
 }
 
-export default async function AdminPaymentsPage() {
+export default async function AdminPaymentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
   const session = await getSession()
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/trainee/dashboard')
   }
 
-  const payments = await getAdminPayments()
+  const params = await searchParams
+  const page = Math.max(1, parseInt(params.page || '1'))
+  const limit = 50
+  const { payments, total } = await getAdminPayments(page, limit)
   const t = await getTranslations('admin.payments')
 
   return (
@@ -80,6 +95,7 @@ export default async function AdminPaymentsPage() {
             </table>
           </div>
         )}
+        <Pagination total={total} page={page} limit={limit} />
       </Card>
     </div>
   )

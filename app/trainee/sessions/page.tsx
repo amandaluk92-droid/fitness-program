@@ -7,6 +7,7 @@ import { Button } from '@/components/shared/Button'
 import { formatDate } from '@/lib/utils'
 import Link from 'next/link'
 import { Plus, Calendar } from 'lucide-react'
+import { SessionActions } from '@/components/trainee/SessionActions'
 
 async function getSessions(traineeId: string) {
   return await prisma.trainingSession.findMany({
@@ -62,6 +63,7 @@ export default async function SessionsPage() {
           <div className="text-center py-12">
             <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-500 mb-4">{t('noSessionsYet')}</p>
+            <p className="text-sm text-gray-400 mb-4">{t('noSessionsHint')}</p>
             <Link href="/trainee/sessions/log">
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
@@ -79,12 +81,15 @@ export default async function SessionsPage() {
                   <h3 className="text-lg font-semibold text-gray-900">{session.program.name}</h3>
                   <p className="text-sm text-gray-600 mt-1">{formatDate(session.date)}</p>
                 </div>
-                {session.rpe && (
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500">RPE</p>
-                    <p className="text-lg font-semibold text-primary-600">{session.rpe}/10</p>
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  {session.rpe && (
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500">RPE</p>
+                      <p className="text-lg font-semibold text-primary-600">{session.rpe}/10</p>
+                    </div>
+                  )}
+                  <SessionActions sessionId={session.id} />
+                </div>
               </div>
 
               {session.notes && (

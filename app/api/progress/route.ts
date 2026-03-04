@@ -128,9 +128,41 @@ export async function GET(request: NextRequest) {
       exercises: Object.values(week.exercises),
     }))
 
+    // Personal records (all-time max weight per exercise)
+    const allSessions = await prisma.trainingSession.findMany({
+      where: { traineeId: targetTraineeId },
+      include: {
+        exercises: {
+          include: { exercise: { select: { id: true, name: true } } },
+        },
+      },
+    })
+
+    const personalRecords: Record<string, { exerciseId: string; exerciseName: string; maxWeight: number; date: Date }> = {}
+    allSessions.forEach((s) => {
+      s.exercises.forEach((ex) => {
+        const maxW = Math.max(...ex.weights, 0)
+        if (!personalRecords[ex.exerciseId] || maxW > personalRecords[ex.exerciseId].maxWeight) {
+          personalRecords[ex.exerciseId] = {
+            exerciseId: ex.exerciseId,
+            exerciseName: ex.exercise.name,
+            maxWeight: maxW,
+            date: s.date,
+          }
+        }
+      })
+    })
+
+    // Adherence rate
+    const totalSessionsInRange = sessions.length
+    const expectedSessions = weeks // Assume ~1 session per week as baseline
+    const adherenceRate = expectedSessions > 0 ? Math.min(100, Math.round((totalSessionsInRange / expectedSessions) * 100)) : 0
+
     return NextResponse.json({
       weeklyData: weeklyArray,
       sessions,
+      personalRecords: Object.values(personalRecords),
+      adherenceRate,
     })
   } catch (error) {
     console.error('Error fetching progress:', error)

@@ -120,6 +120,8 @@
     "payments": "付款",
     "reports": "報告",
     "settings": "設置",
+    "exercises": "動作",
+    "templates": "範本",
     "signOut": "登出",
     "roleTrainer": "教練",
     "roleTrainee": "學員",
@@ -184,6 +186,9 @@
       "progressOverTime": "進度變化",
       "loadingProgress": "載入進度數據中...",
       "noData": "所選篩選條件下暫無進度數據",
+      "personalRecords": "個人紀錄",
+      "adherence": "出席率",
+      "adherenceDesc": "已完成的預期訓練百分比",
       "bodyWeight": "體重",
       "logWeight": "記錄今日體重",
       "weightLogged": "已記錄"
@@ -193,7 +198,13 @@
       "subtitle": "查看並記錄您的訓練",
       "logSession": "記錄訓練",
       "noSessionsYet": "暫無訓練記錄。開始記錄您的訓練吧！",
+      "noSessionsHint": "前往進行中計劃並點擊「記錄訓練」以記錄您的訓練。",
       "logFirstSession": "記錄第一次訓練",
+      "editSession": "編輯訓練",
+      "saveChanges": "儲存更改",
+      "updateFailed": "更新訓練失敗",
+      "deleteConfirm": "您確定要刪除此訓練記錄嗎？",
+      "notesLabel": "備註",
       "exercisesLabel": "動作：",
       "set": "第 {n} 組",
       "repsAtKg": "{reps} 次 @ {weight} kg"
@@ -226,6 +237,7 @@
     },
     "activeProgramsList": {
       "noActive": "暫無進行中計劃。您的教練會為您分配計劃。",
+      "noActiveHint": "您的教練分配計劃後，計劃將顯示在這裡。",
       "exercisesCount": "{count} 個動作",
       "duration": "時長：",
       "weeks": "週",
@@ -366,6 +378,7 @@
       "assignProgram": "分配計劃",
       "noTrainees": "暫無學員。連接學員以分配計劃。",
       "noConnectedTrainees": "暫無已連接學員。請在上方使用「連接學員」透過電郵添加學員。",
+      "connectHint": "使用上方表單透過電郵連接學員。",
       "activePrograms": "進行中計劃",
       "lastSession": "最近訓練：{date}",
       "noSessionsYet": "暫無訓練"
@@ -493,6 +506,9 @@
       "barChart": "柱狀圖",
       "loadingProgress": "載入進度數據中...",
       "noData": "所選篩選條件下暫無進度數據",
+      "personalRecords": "個人紀錄",
+      "adherence": "出席率",
+      "adherenceDesc": "已完成的預期訓練百分比",
       "progressOverTime": "進度變化"
     },
     "progressPageContent": {
@@ -547,6 +563,19 @@
     "fileTooLarge": "檔案太大。最大 10MB。",
     "invalidFileType": "無效的檔案類型。請使用 JPEG、PNG 或 WebP。",
     "loading": "載入照片中..."
+  },
+  "connections": {
+    "disconnectConfirm": "您確定要取消連接嗎？"
+  },
+  "onboarding": {
+    "title": "開始使用",
+    "progress": "已完成 {done}/{total}",
+    "completeProfile": "完善您的個人資料",
+    "connectTrainer": "連接教練",
+    "connectTrainee": "連接學員",
+    "viewProgram": "查看您的第一個計劃",
+    "createProgram": "創建您的第一個計劃",
+    "logFirstSession": "記錄您的第一次訓練"
   },
   "admin": {
     "dashboard": {

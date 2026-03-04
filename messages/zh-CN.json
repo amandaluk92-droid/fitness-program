@@ -120,6 +120,8 @@
     "payments": "付款",
     "reports": "报告",
     "settings": "设置",
+    "exercises": "动作",
+    "templates": "模板",
     "signOut": "退出登录",
     "roleTrainer": "教练",
     "roleTrainee": "学员",
@@ -184,6 +186,9 @@
       "progressOverTime": "进度变化",
       "loadingProgress": "加载进度数据中...",
       "noData": "所选筛选条件下暂无进度数据",
+      "personalRecords": "个人纪录",
+      "adherence": "出勤率",
+      "adherenceDesc": "已完成的预期训练百分比",
       "bodyWeight": "体重",
       "logWeight": "记录今日体重",
       "weightLogged": "已记录"
@@ -193,7 +198,13 @@
       "subtitle": "查看并记录您的训练",
       "logSession": "记录训练",
       "noSessionsYet": "暂无训练记录。开始记录您的训练吧！",
+      "noSessionsHint": "前往进行中计划并点击「记录训练」以记录您的训练。",
       "logFirstSession": "记录第一次训练",
+      "editSession": "编辑训练",
+      "saveChanges": "保存更改",
+      "updateFailed": "更新训练失败",
+      "deleteConfirm": "您确定要删除此训练记录吗？",
+      "notesLabel": "备注",
       "exercisesLabel": "动作：",
       "set": "第 {n} 组",
       "repsAtKg": "{reps} 次 @ {weight} kg"
@@ -226,6 +237,7 @@
     },
     "activeProgramsList": {
       "noActive": "暂无进行中计划。您的教练会为您分配计划。",
+      "noActiveHint": "您的教练分配计划后，计划将显示在这里。",
       "exercisesCount": "{count} 个动作",
       "duration": "时长：",
       "weeks": "周",
@@ -366,6 +378,7 @@
       "assignProgram": "分配计划",
       "noTrainees": "暂无学员。连接学员以分配计划。",
       "noConnectedTrainees": "暂无已连接学员。请使用上方「连接学员」通过邮箱添加学员。",
+      "connectHint": "使用上方表单通过邮箱连接学员。",
       "activePrograms": "进行中计划",
       "lastSession": "最近训练：{date}",
       "noSessionsYet": "暂无训练"
@@ -493,6 +506,9 @@
       "barChart": "柱状图",
       "loadingProgress": "加载进度数据中...",
       "noData": "所选筛选条件下暂无进度数据",
+      "personalRecords": "个人纪录",
+      "adherence": "出勤率",
+      "adherenceDesc": "已完成的预期训练百分比",
       "progressOverTime": "进度变化"
     },
     "progressPageContent": {
@@ -547,6 +563,19 @@
     "fileTooLarge": "文件太大。最大 10MB。",
     "invalidFileType": "无效的文件类型。请使用 JPEG、PNG 或 WebP。",
     "loading": "加载照片中..."
+  },
+  "connections": {
+    "disconnectConfirm": "您确定要取消连接吗？"
+  },
+  "onboarding": {
+    "title": "开始使用",
+    "progress": "已完成 {done}/{total}",
+    "completeProfile": "完善您的个人资料",
+    "connectTrainer": "连接教练",
+    "connectTrainee": "连接学员",
+    "viewProgram": "查看您的第一个计划",
+    "createProgram": "创建您的第一个计划",
+    "logFirstSession": "记录您的第一次训练"
   },
   "admin": {
     "dashboard": {

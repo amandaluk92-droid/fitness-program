@@ -1,7 +1,9 @@
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 import { Card } from '@/components/shared/Card'
+import { Button } from '@/components/shared/Button'
 import { getSubscriptionFinancialReport } from '@/lib/reports/subscription-financial'
 import { ReportExportButtons } from '@/components/admin/ReportExportButtons'
 import { formatCurrencyHKD } from '@/lib/utils'
@@ -94,6 +96,13 @@ export default async function AdminReportsPage() {
             </table>
           </div>
         )}
+      </Card>
+
+      <Card title="Audit Logs">
+        <p className="text-sm text-gray-600 mb-4">View all admin actions and security events.</p>
+        <Link href="/admin/audit-logs">
+          <Button variant="outline">View Audit Logs</Button>
+        </Link>
       </Card>
     </div>
   )

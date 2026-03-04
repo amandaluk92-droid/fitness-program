@@ -11,7 +11,7 @@ import bcrypt from 'bcryptjs'
  * For local development, allows unauthenticated access using a demo trainee account.
  */
 const DEMO_TRAINEE_EMAIL = 'trainee@demo.com'
-const isDemoAllowed = process.env.NODE_ENV === 'development'
+const isDemoAllowed = process.env.DEMO_MODE === 'true'
 
 /** For demo: when no real session, return session for demo trainee so app works without login */
 async function getDemoSession(): Promise<Session | null> {

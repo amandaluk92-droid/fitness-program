@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { requireAdmin } from '@/lib/admin'
 import { prisma } from '@/lib/prisma'
+import { logAuditEvent } from '@/lib/audit-log'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 
@@ -28,6 +29,13 @@ export async function PATCH(
       where: { id },
       data: { password: hashedPassword },
     })
+
+    logAuditEvent({
+      userId: session!.user.id,
+      action: 'ADMIN_PASSWORD_RESET',
+      resource: 'User',
+      resourceId: id,
+    }).catch(() => {})
 
     return NextResponse.json({ success: true })
   } catch (error) {

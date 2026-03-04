@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { canTrainerAddTrainee, isPaymentsDisabled } from '@/lib/trainer-limits'
 import { formatDate } from '@/lib/utils'
 import { Users, FileText, Calendar, TrendingUp, CreditCard } from 'lucide-react'
+import { OnboardingChecklist } from '@/components/shared/OnboardingChecklist'
 
 async function getTrainerStats(trainerId: string) {
   const totalTraineesResult = await prisma.programAssignment.findMany({
@@ -234,6 +235,8 @@ export default async function TrainerDashboard() {
           </div>
         </Card>
       </div>
+
+      <OnboardingChecklist role="TRAINER" />
 
       {/* Recent Activity */}
       {recentSessions.length > 0 && (

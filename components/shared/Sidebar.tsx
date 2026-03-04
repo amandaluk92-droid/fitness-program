@@ -15,7 +15,9 @@ import {
   User,
   CreditCard,
   DollarSign,
-  Settings
+  Settings,
+  Dumbbell,
+  BookOpen,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from './Button'
@@ -38,6 +40,8 @@ const sidebarKeys = {
   subscriptions: true,
   payments: true,
   reports: true,
+  exercises: true,
+  templates: true,
   settings: true,
 } as const
 
@@ -47,6 +51,8 @@ const adminNavItems: NavItem[] = [
   { nameKey: 'subscriptions', href: '/admin/subscriptions', icon: CreditCard },
   { nameKey: 'payments', href: '/admin/payments', icon: DollarSign },
   { nameKey: 'reports', href: '/admin/reports', icon: FileText },
+  { nameKey: 'exercises', href: '/admin/exercises', icon: Dumbbell },
+  { nameKey: 'templates', href: '/admin/templates', icon: BookOpen },
   { nameKey: 'settings', href: '/admin/settings', icon: Settings },
 ]
 
@@ -72,9 +78,11 @@ interface SidebarProps {
   userName: string
   /** When true, hide subscription/payments nav items */
   paymentsDisabled?: boolean
+  /** Called when a nav link is clicked (used by mobile drawer to close) */
+  onClose?: () => void
 }
 
-export function Sidebar({ role, userName, paymentsDisabled = false }: SidebarProps) {
+export function Sidebar({ role, userName, paymentsDisabled = false, onClose }: SidebarProps) {
   const pathname = usePathname()
   const t = useTranslations('sidebar')
 
@@ -123,6 +131,7 @@ export function Sidebar({ role, userName, paymentsDisabled = false }: SidebarPro
               <Link
                 key={item.nameKey}
                 href={item.href}
+                onClick={() => onClose?.()}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                   isActive

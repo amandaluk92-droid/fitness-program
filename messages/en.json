@@ -120,6 +120,8 @@
     "payments": "Payments",
     "reports": "Reports",
     "settings": "Settings",
+    "exercises": "Exercises",
+    "templates": "Templates",
     "signOut": "Sign Out",
     "roleTrainer": "trainer",
     "roleTrainee": "trainee",
@@ -184,6 +186,9 @@
       "progressOverTime": "Progress Over Time",
       "loadingProgress": "Loading progress data...",
       "noData": "No progress data available for the selected filters",
+      "personalRecords": "Personal Records",
+      "adherence": "Adherence",
+      "adherenceDesc": "Percentage of expected sessions completed",
       "bodyWeight": "Body weight",
       "logWeight": "Log today's weight",
       "weightLogged": "Weight logged"
@@ -193,7 +198,13 @@
       "subtitle": "View and log your training sessions",
       "logSession": "Log Session",
       "noSessionsYet": "No sessions logged yet. Start logging your workouts!",
+      "noSessionsHint": "Go to an active program and tap \"Log Session\" to record your workout.",
       "logFirstSession": "Log Your First Session",
+      "editSession": "Edit Session",
+      "saveChanges": "Save Changes",
+      "updateFailed": "Failed to update session",
+      "deleteConfirm": "Are you sure you want to delete this session?",
+      "notesLabel": "Notes",
       "exercisesLabel": "Exercises:",
       "set": "Set {n}",
       "repsAtKg": "{reps} reps @ {weight} kg"
@@ -226,6 +237,7 @@
     },
     "activeProgramsList": {
       "noActive": "No active programs. Your trainer will assign programs to you.",
+      "noActiveHint": "Once your trainer assigns a program, it will appear here.",
       "exercisesCount": "{count} exercises",
       "duration": "Duration:",
       "weeks": "weeks",
@@ -366,6 +378,7 @@
       "assignProgram": "Assign program",
       "noTrainees": "No trainees yet. Connect with trainees to assign programs.",
       "noConnectedTrainees": "No connected trainees yet. Use \"Connect with trainee\" above to add trainees by email.",
+      "connectHint": "Use the form above to connect with trainees by their email address.",
       "activePrograms": "Active Programs",
       "lastSession": "Last session: {date}",
       "noSessionsYet": "No sessions yet"
@@ -493,6 +506,9 @@
       "barChart": "Bar Chart",
       "loadingProgress": "Loading progress data...",
       "noData": "No progress data available for the selected filters",
+      "personalRecords": "Personal Records",
+      "adherence": "Adherence",
+      "adherenceDesc": "Percentage of expected sessions completed",
       "progressOverTime": "Progress Over Time"
     },
     "progressPageContent": {
@@ -547,6 +563,19 @@
     "fileTooLarge": "File too large. Maximum 10MB.",
     "invalidFileType": "Invalid file type. Use JPEG, PNG, or WebP.",
     "loading": "Loading photos..."
+  },
+  "connections": {
+    "disconnectConfirm": "Are you sure you want to disconnect?"
+  },
+  "onboarding": {
+    "title": "Getting Started",
+    "progress": "{done} of {total} completed",
+    "completeProfile": "Complete your profile",
+    "connectTrainer": "Connect with a trainer",
+    "connectTrainee": "Connect with a trainee",
+    "viewProgram": "View your first program",
+    "createProgram": "Create your first program",
+    "logFirstSession": "Log your first session"
   },
   "admin": {
     "dashboard": {

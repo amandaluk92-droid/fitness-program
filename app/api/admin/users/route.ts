@@ -13,6 +13,9 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url)
     const roleFilter = searchParams.get('role') // TRAINER | TRAINEE | null for all
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'))
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '50')))
+    const skip = (page - 1) * limit
 
     const users = await prisma.user.findMany({
       where: roleFilter ? { role: roleFilter as 'TRAINER' | 'TRAINEE' | 'ADMIN' } : undefined,
@@ -41,6 +44,8 @@ export async function GET(request: Request) {
         },
       },
       orderBy: { name: 'asc' },
+      skip,
+      take: limit,
     })
 
     const trainerIds = users.filter((u) => u.role === 'TRAINER').map((u) => u.id)
@@ -78,7 +83,11 @@ export async function GET(request: Request) {
       }
     })
 
-    return NextResponse.json({ users: usersWithSummary })
+    const total = await prisma.user.count({
+      where: roleFilter ? { role: roleFilter as 'TRAINER' | 'TRAINEE' | 'ADMIN' } : undefined,
+    })
+
+    return NextResponse.json({ users: usersWithSummary, total, page, limit })
   } catch (error) {
     console.error('Error fetching admin users:', error)
     return NextResponse.json(

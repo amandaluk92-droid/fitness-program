@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import { requireAdmin } from '@/lib/admin'
 import { prisma } from '@/lib/prisma'
+import { logAuditEvent } from '@/lib/audit-log'
 import { z } from 'zod'
 
 function maskSecret(value: string | null): string {
@@ -163,6 +164,12 @@ export async function PATCH(request: NextRequest) {
         },
       })
     }
+
+    logAuditEvent({
+      userId: session!.user.id,
+      action: 'SETTINGS_UPDATE',
+      resource: 'StripeConfig',
+    }).catch(() => {})
 
     return NextResponse.json({ success: true })
   } catch (error) {

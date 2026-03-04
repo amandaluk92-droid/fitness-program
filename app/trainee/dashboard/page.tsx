@@ -4,11 +4,13 @@ import { getTranslations } from 'next-intl/server'
 import { prisma } from '@/lib/prisma'
 import { ActiveProgramsList } from '@/components/trainee/ActiveProgramsList'
 import { ConnectTrainerForm } from '@/components/trainee/ConnectTrainerForm'
+import { DisconnectButton } from '@/components/shared/DisconnectButton'
 import { Card } from '@/components/shared/Card'
 import { formatDate } from '@/lib/utils'
 import { FileText, Calendar, TrendingUp, User } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/shared/Button'
+import { OnboardingChecklist } from '@/components/shared/OnboardingChecklist'
 
 async function getTraineeData(traineeId: string) {
   const [programs, recentSessions, stats] = await Promise.all([
@@ -127,6 +129,8 @@ export default async function TraineeDashboard() {
         </Card>
       </div>
 
+      <OnboardingChecklist role="TRAINEE" />
+
       {/* Connect with your trainer */}
       <Card title={t('connectCardTitle')}>
         <p className="text-sm text-gray-600 mb-4">
@@ -138,10 +142,13 @@ export default async function TraineeDashboard() {
             <p className="text-sm font-medium text-gray-700 mb-2">{t('yourTrainers')}</p>
             <ul className="space-y-2">
               {connectedTrainers.map((t) => (
-                <li key={t.id} className="flex items-center gap-2 text-sm text-gray-600">
-                  <User className="h-4 w-4 text-primary-500" />
-                  <span className="font-medium text-gray-900">{t.name}</span>
-                  <span>({t.email})</span>
+                <li key={t.id} className="flex items-center justify-between text-sm text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-primary-500" />
+                    <span className="font-medium text-gray-900">{t.name}</span>
+                    <span>({t.email})</span>
+                  </div>
+                  <DisconnectButton email={t.email} />
                 </li>
               ))}
             </ul>

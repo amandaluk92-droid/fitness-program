@@ -7,38 +7,47 @@ import { Prisma } from '@prisma/client'
 import { getMaxTrainees } from '@/lib/subscription-tiers'
 import { formatDate } from '@/lib/utils'
 import { AdminUsersTable } from '@/components/admin/AdminUsersTable'
+import { Pagination } from '@/components/admin/Pagination'
 
-async function getAdminUsers(roleFilter?: string) {
-  const users = await prisma.user.findMany({
-    where: roleFilter
-      ? { role: roleFilter as 'ADMIN' | 'TRAINER' | 'TRAINEE' }
-      : undefined,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      createdAt: true,
-      _count: {
-        select: {
-          createdPrograms: true,
-          programAssignments: true,
-          trainingSessions: true,
+async function getAdminUsers(roleFilter?: string, page = 1, limit = 50) {
+  const skip = (page - 1) * limit
+  const where = roleFilter
+    ? { role: roleFilter as 'ADMIN' | 'TRAINER' | 'TRAINEE' }
+    : undefined
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        _count: {
+          select: {
+            createdPrograms: true,
+            programAssignments: true,
+            trainingSessions: true,
+          },
+        },
+        trainerSubscriptions: {
+          where: { status: 'ACTIVE' },
+          take: 1,
+          orderBy: { createdAt: 'desc' },
+        },
+        payments: {
+          where: { status: 'COMPLETED' },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
         },
       },
-      trainerSubscriptions: {
-        where: { status: 'ACTIVE' },
-        take: 1,
-        orderBy: { createdAt: 'desc' },
-      },
-      payments: {
-        where: { status: 'COMPLETED' },
-        orderBy: { createdAt: 'desc' },
-        take: 1,
-      },
-    },
-    orderBy: { name: 'asc' },
-  })
+      orderBy: { name: 'asc' },
+      skip,
+      take: limit,
+    }),
+    prisma.user.count({ where }),
+  ])
 
   const trainerIds = users.filter((u) => u.role === 'TRAINER').map((u) => u.id)
   const traineeCounts =
@@ -55,7 +64,7 @@ async function getAdminUsers(roleFilter?: string) {
     traineeCounts.map((r) => [r.trainerId, r.count])
   )
 
-  return users.map((u) => {
+  const usersWithSummary = users.map((u) => {
     const sub = u.trainerSubscriptions[0]
     const traineeCount = u.role === 'TRAINER' ? traineeCountMap[u.id] ?? 0 : 0
     return {
@@ -74,12 +83,14 @@ async function getAdminUsers(roleFilter?: string) {
       lastPaymentAt: u.payments[0]?.createdAt ?? null,
     }
   })
+
+  return { users: usersWithSummary, total }
 }
 
 export default async function AdminUsersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ role?: string }>
+  searchParams: Promise<{ role?: string; page?: string }>
 }) {
   const session = await getSession()
   if (!session || session.user.role !== 'ADMIN') {
@@ -87,7 +98,9 @@ export default async function AdminUsersPage({
   }
 
   const params = await searchParams
-  const users = await getAdminUsers(params.role)
+  const page = Math.max(1, parseInt(params.page || '1'))
+  const limit = 50
+  const { users, total } = await getAdminUsers(params.role, page, limit)
   const t = await getTranslations('admin.users')
 
   return (
@@ -99,6 +112,7 @@ export default async function AdminUsersPage({
 
       <Card>
         <AdminUsersTable users={users} />
+        <Pagination total={total} page={page} limit={limit} />
       </Card>
     </div>
   )

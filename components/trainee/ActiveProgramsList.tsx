@@ -33,6 +33,7 @@ export function ActiveProgramsList({ programs }: ActiveProgramsListProps) {
         <div className="text-center py-8">
           <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-500">{t('noActive')}</p>
+          <p className="text-sm text-gray-400 mt-2">{t('noActiveHint')}</p>
         </div>
       </Card>
     )

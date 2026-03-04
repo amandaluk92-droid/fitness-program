@@ -130,6 +130,57 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getSession()
+    if (!session || (session.user.role !== 'TRAINER' && session.user.role !== 'TRAINEE')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const email = body.email as string | undefined
+    const connectionId = body.connectionId as string | undefined
+
+    if (!email && !connectionId) {
+      return NextResponse.json({ error: 'Email or connectionId required' }, { status: 400 })
+    }
+
+    let connection
+    if (connectionId) {
+      connection = await prisma.trainerTraineeConnection.findUnique({
+        where: { id: connectionId },
+      })
+    } else if (email) {
+      const otherUser = await prisma.user.findUnique({
+        where: { email: email.trim().toLowerCase() },
+      })
+      if (!otherUser) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      }
+      const trainerId = session.user.role === 'TRAINER' ? session.user.id : otherUser.id
+      const traineeId = session.user.role === 'TRAINEE' ? session.user.id : otherUser.id
+      connection = await prisma.trainerTraineeConnection.findUnique({
+        where: { trainerId_traineeId: { trainerId, traineeId } },
+      })
+    }
+
+    if (!connection) {
+      return NextResponse.json({ error: 'Connection not found' }, { status: 404 })
+    }
+
+    // Verify requesting user is part of this connection
+    if (connection.trainerId !== session.user.id && connection.traineeId !== session.user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
+    await prisma.trainerTraineeConnection.delete({ where: { id: connection.id } })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting connection:', error)
+    return NextResponse.json({ error: 'Failed to delete connection' }, { status: 500 })
+  }
+}
+
 export async function GET() {
   try {
     const session = await getSession()
